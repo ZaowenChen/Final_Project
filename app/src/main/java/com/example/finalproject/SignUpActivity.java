@@ -39,8 +39,6 @@ public class SignUpActivity extends AppCompatActivity {
         UsernameLayout = findViewById(R.id.UsernameLayout);
         PasswordLayout = findViewById(R.id.PasswordLayout);
 
-
-
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
