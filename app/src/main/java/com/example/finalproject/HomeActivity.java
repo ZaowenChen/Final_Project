@@ -29,13 +29,6 @@ public class HomeActivity extends AppCompatActivity {
         TextView header = findViewById(R.id.header);
         header.setText("Welcome " + name + "!");
 
-        // Create button object for all the buttons on the page
-        Button diary = findViewById(R.id.diary_home);
-        Button notes = findViewById(R.id.notes_home);
-        Button mood = findViewById(R.id.mood_home);
-        Button links = findViewById(R.id.helpfulLinks);
-        Button logout = findViewById(R.id.logout);
-
 //
 //        // For diary
 //        diary.setOnClickListener(new View.OnClickListener() {
