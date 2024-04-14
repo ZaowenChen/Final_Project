@@ -23,8 +23,8 @@ public class LoginActivity extends AppCompatActivity {
 
         db = new Database(this, "UserDatabase.db");
 
-        Button submit = findViewById(R.id.button);
-        Button signUp = findViewById(R.id.SignUpPage);
+        Button submit = findViewById(R.id.login);
+        Button signUp = findViewById(R.id.newuser);
 
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
