@@ -1,91 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:app="http://schemas.android.com/apk/res-auto"
-xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-android:orientation="vertical"
-tools:context=".LoginActivity">
-
-<TextView
-    android:id="@+id/Login"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingVertical="20dp"
-    android:text="Login"
-    android:textAlignment="center"
-    android:textSize="60sp" />
-
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".LoginActivity">
 
     <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
+        android:id="@+id/Login"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:paddingHorizontal="10dp"
-        android:text="Username:"
-        android:textAlignment="textEnd"
-        android:textSize="20sp" />
+        android:background="@color/light_blue"
+        android:fontFamily="monospace"
+        android:paddingVertical="20dp"
+        android:text="Login"
+        android:textAlignment="center"
+        android:textSize="60sp" />
 
-    <EditText
-        android:id="@+id/username"
-        android:layout_width="wrap_content"
-        android:layout_height="48dp"
-        android:layout_weight="1"
-        android:ems="10"
-        android:hint="Must be 5 characters"
-        android:inputType="textEmailAddress" />
-</LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="60sp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingHorizontal="20dp"
+            android:text="Email:"
+            android:textAlignment="textEnd"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/username"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:ems="10"
+            android:hint="Email Address"
+            android:inputType="textEmailAddress" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/txtview"
+            android:layout_width="60sp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingHorizontal="10dp"
+            android:text="Password: "
+            android:textAlignment="textEnd"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:ems="10"
+            android:hint="Must be 8 characters"
+            android:inputType="textPassword" />
+
+    </LinearLayout>
 
     <TextView
-        android:id="@+id/txtview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:paddingHorizontal="10dp"
-        android:text="Password: "
-        android:textAlignment="textEnd"
-        android:textSize="20sp" />
+        android:id="@+id/errPrint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
-    <EditText
-        android:id="@+id/password"
-        android:layout_width="wrap_content"
-        android:layout_height="48dp"
-        android:layout_weight="1"
-        android:ems="10"
-        android:hint="Must be 8 characters"
-        android:inputType="textPassword" />
+    <RelativeLayout
 
-</LinearLayout>
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-<TextView
-    android:id="@+id/errPrint"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content" />
+        <Button
+            android:id="@+id/login"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="30dp"
+            android:text="Login"
+            android:textColor="@color/black"
+            android:backgroundTint="@color/light_blue"
+            android:layout_centerHorizontal="true" />
 
-<Button
-    android:id="@+id/button"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:paddingHorizontal="30dp"
-    android:text="Submit"
-    android:translationX="150dp" />
+        <Button
+            android:id="@+id/newuser"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/login"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/black"
+            android:backgroundTint="@color/light_blue"
+            android:paddingHorizontal="30dp"
+            android:text="New User" />
 
-<Button
-    android:id="@+id/SignUpPage"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:paddingHorizontal="30dp"
-    android:text="Sign Up page"
-    android:translationX="150dp" />
+
+    </RelativeLayout>
+
+
 
 </LinearLayout>
