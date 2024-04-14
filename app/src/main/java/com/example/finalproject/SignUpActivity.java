@@ -30,7 +30,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         // Initialize views
         editTextName = findViewById(R.id.Name);
-        editTextAge = findViewById(R.id.Age);
+        editTextAge = findViewById(R.id.Email);
         editTextGender = findViewById(R.id.Gender);
         editTextAddress = findViewById(R.id.Address);
         editTextUsername = findViewById(R.id.Username);

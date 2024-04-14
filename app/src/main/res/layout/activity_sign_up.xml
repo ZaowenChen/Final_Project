@@ -12,14 +12,16 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/TItle"
+            android:id="@+id/title_signup"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight=".5"
-            android:paddingVertical="13dp"
-            android:text="Welcome to our APP"
+            android:layout_height="wrap_content"
+            android:fontFamily="monospace"
+            android:paddingVertical="10sp"
+            android:text="Sign Up"
             android:textAlignment="center"
-            android:textSize="20sp" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+            android:textSize="30sp"
+            android:textStyle="bold" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
@@ -30,7 +32,7 @@
                 android:id="@+id/Name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="What's your name" />
+                android:hint="Name" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -39,35 +41,10 @@
             android:layout_weight="1">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/Age"
+                android:id="@+id/Email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="What's your age?" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/Gender"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="What's your gender" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/Address"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="What's your address?" />
+                android:hint="Email" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -83,7 +60,7 @@
                 android:id="@+id/Username"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="5 characters username" />
+                android:hint="Username" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -96,7 +73,7 @@
                 android:id="@+id/passwords"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="passwords" />
+                android:hint="Password" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
@@ -104,7 +81,9 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.5"
-            android:text="Sign Up" />
+            android:backgroundTint="@color/blue"
+            android:text="Sign Up"
+            android:textColor="@color/raisin" />
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
