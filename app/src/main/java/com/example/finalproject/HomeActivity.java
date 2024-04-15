@@ -22,31 +22,32 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        db = new Database(this, "database");
+        //db = new Database(this, "database");
         // Received intent and get sharedpreferences
-        Intent received_intent = getIntent();
-        String username = received_intent.getStringExtra("Username");
+        //Intent received_intent = getIntent();
+        //String username = received_intent.getStringExtra("Username");
 
-        String name = db.getName(username);
+        //String name = db.getName(username);
 
         TextView global = findViewById(R.id.globalposts);
         TextView friends_post = findViewById(R.id.friendposts);
 
-        global.setBackgroundColor(Color.parseColor("@color/columbia_blue"));
+        global.setBackgroundColor(Color.parseColor("#BDE0FE"));
+        friends_post.setBackgroundColor(Color.parseColor("#FFFFFF"));
 
         global.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                global.setBackgroundColor(Color.parseColor("@color/columbia_blue"));
-                friends_post.setBackgroundColor(Color.parseColor("@color/white"));
+                global.setBackgroundColor(Color.parseColor("#BDE0FE"));
+                friends_post.setBackgroundColor(Color.parseColor("#FFFFFF"));
             }
         });
 
         friends_post.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                friends_post.setBackgroundColor(Color.parseColor("@color/columbia_blue"));
-                global.setBackgroundColor(Color.parseColor("@color/white"));
+                friends_post.setBackgroundColor(Color.parseColor("#BDE0FE"));
+                global.setBackgroundColor(Color.parseColor("#FFFFFF"));
             }
         });
 
