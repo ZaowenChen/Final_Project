@@ -56,11 +56,11 @@
         <EditText
             android:id="@+id/info1_2"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:layout_weight="3"
+            android:hint="[user's INFO1]"
             android:paddingHorizontal="8sp"
             android:text="[user's INFO1]"
-            android:hint="[user's INFO1]"
             android:textAlignment="viewStart"
             android:textSize="16sp" />
     </LinearLayout>
@@ -83,11 +83,11 @@
         <EditText
             android:id="@+id/info2_2"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:layout_weight="3"
+            android:hint="[user's INFO2]"
             android:paddingHorizontal="8sp"
             android:text="[user's INFO2]"
-            android:hint="[user's INFO2]"
             android:textAlignment="textStart"
             android:textSize="16sp" />
     </LinearLayout>
@@ -110,11 +110,11 @@
         <EditText
             android:id="@+id/info3_2"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:layout_weight="3"
+            android:hint="[user's INFO3]"
             android:paddingHorizontal="8sp"
             android:text="[user's INFO3]"
-            android:hint="[user's INFO3]"
             android:textAlignment="textStart"
             android:textSize="16sp" />
 
