@@ -13,39 +13,43 @@ import java.util.ArrayList;
 
 public class Database extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "UserDatabase.db";
-    private static final int DATABASE_VERSION = 7; // database version
-    private static final String TABLE_NAME = "users"; // define the user table column
-    private static final String ID_COL = "id";
+    private static final int DATABASE_VERSION = 7;
+
+    private static final String TABLE_NAME = "Userinfo";
+    private static final String USERINFO_ID_COL = "id";
     private static final String NAME_COL = "name";
     private static final String AGE_COL = "age";
     private static final String GENDER_COL = "gender";
     private static final String USERNAME_COL = "username";
     private static final String PASSWORD_COL = "password";
 
-    private static final String TABLE2_NAME = "tracker"; // define the tracker table
-    private static final String DATE_COl = "date";  // define the date colum
-    private static final String NOTES_COL = "notes";
-    private static final String EXERCISE_COL = "exercise";
-    private static final String SOCIAL_COL = "social";
-    private static final String HOMEWORK_COL = "homework";
-    private static final String SLEEP_COL = "sleep";
-    private static final String EAT_COL = "eat";
+    private static final String TABLE2_NAME = "PrivatePost";
+    private static final String PRIVATEPOST_ID_COL = "Post_ID";
+    private static final String USER_PRIVATEPOST_COL = "UserID";
+    private static final String PRIVATE_POST_COL = "Post";
+    private static final String DATE_PRIVATEPOST_COL = "Date";
 
-    private static final String TABLE3_NAME = "MoodTable"; // define the moodtable column
-    private static final String MOOD_USER = "MoodUsername";
-    private static final String DATE_COL_MOOD = "date";  // define the date colum
-    private static final String MOOD_COL = "Mood";
-    private static final String ANXIETY_COL = "Anxiety";
-    private static final String ON_MEDICINE_COL = "OnMedicine";
-    private static final String TAKE_MEDICINE_COL = "TakeMedicine";
-    private static final String APPLICABLE_COL = "Applicable";
+    private static final String TABLE3_NAME = "PublicPost";
+    private static final String PUBLICPOST_ID_COL = "Post_ID";
+    private static final String USER_PUBLICPOST_COL = "UserID";
+    private static final String PUBLIC_POST_COL = "Post";
+    private static final String DATE_PUBLICPOST_COL = "Date";
+
+    private static final String TABLE4_NAME = "Friendzone";
+    private static final String USER_FRIENDZONE_COL = "User_ID";
+    private static final String FRIEND_FRIENDZONE_COL = "Friend_ID";
+
+    private static final String TABLE5_NAME = "FriendRequest";
+    private static final String USER_COL = "User_ID";
+    private static final String FRIEND_COL = "Friend_ID";
+
 
     public Database(Context context, String database) {super(context, DATABASE_NAME, null, DATABASE_VERSION);}
 
     @Override
-    public void onCreate(SQLiteDatabase db) { // creat three tables
+    public void onCreate(SQLiteDatabase db) {
         String createTableSQL = "CREATE TABLE " + TABLE_NAME + " (" +
-                ID_COL + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                USERINFO_ID_COL + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 NAME_COL + " TEXT, " +
                 AGE_COL + " INTEGER, " +
                 GENDER_COL + " TEXT, " +
@@ -53,30 +57,41 @@ public class Database extends SQLiteOpenHelper {
                 PASSWORD_COL + " TEXT)";
 
         String createTable2SQL = "CREATE TABLE " + TABLE2_NAME + " (" +
-                ID_COL + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                DATE_COl + " TEXT, " +   // add the time into the table
-                USERNAME_COL + " TEXT, " +
-                NOTES_COL + " TEXT, " +
-                EXERCISE_COL + " BOOLEAN, " +
-                SOCIAL_COL + " BOOLEAN, " +
-                HOMEWORK_COL + " BOOLEAN, " +
-                SLEEP_COL + " BOOLEAN, " +
-                EAT_COL + " BOOLEAN)";
-
+                PRIVATEPOST_ID_COL + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                USERINFO_ID_COL + " INTEGER, " +
+                PRIVATE_POST_COL + " TEXT, " +
+                DATE_PRIVATEPOST_COL + " TEXT, " +
+                "FOREIGN KEY (" + USERINFO_ID_COL + ") REFERENCES " + TABLE_NAME + "(" + USERINFO_ID_COL + "))";
 
         String createTable3SQL = "CREATE TABLE " + TABLE3_NAME + " (" +
-                ID_COL + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                MOOD_USER + " TEXT, " +
-                DATE_COL_MOOD + " TEXT, " +   // add the time into the table
-                MOOD_COL + " INTEGER, " +
-                ANXIETY_COL + " INTEGER, " +
-                ON_MEDICINE_COL + " INTEGER, " +
-                TAKE_MEDICINE_COL + " INTEGER)";
+                PUBLICPOST_ID_COL + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                USERINFO_ID_COL + " INTEGER, " +
+                PUBLIC_POST_COL + " TEXT, " +
+                DATE_PUBLICPOST_COL + " TEXT, " +
+                "FOREIGN KEY (" + USERINFO_ID_COL + ") REFERENCES " + TABLE_NAME + "(" + USERINFO_ID_COL + "))";
+
+        String createTable4SQL = "CREATE TABLE " + TABLE4_NAME + " (" +
+                USER_FRIENDZONE_COL + " INTEGER, " +
+                FRIEND_FRIENDZONE_COL + " INTEGER, " +
+                "PRIMARY KEY (" + USER_FRIENDZONE_COL + ", " + FRIEND_FRIENDZONE_COL + "), " +
+                "FOREIGN KEY (" + USER_FRIENDZONE_COL + ") REFERENCES " + TABLE_NAME + "(" + USERINFO_ID_COL + "), " +
+                "FOREIGN KEY (" + FRIEND_FRIENDZONE_COL + ") REFERENCES " + TABLE_NAME + "(" + USERINFO_ID_COL + "))";
+
+        String createTable5SQL = "CREATE TABLE " + TABLE5_NAME + " (" +
+                USER_COL + " INTEGER, " +
+                FRIEND_COL + " INTEGER, " +
+                "PRIMARY KEY (" + USER_COL + ", " + FRIEND_COL + "), " +
+                "FOREIGN KEY (" + USER_COL + ") REFERENCES " + TABLE_NAME + "(" + USERINFO_ID_COL + "), " +
+                "FOREIGN KEY (" + FRIEND_COL + ") REFERENCES " + TABLE_NAME + "(" + USERINFO_ID_COL + "))";
 
         db.execSQL(createTableSQL);
         db.execSQL(createTable2SQL);
         db.execSQL(createTable3SQL);
-    }
+        db.execSQL(createTable4SQL);
+        db.execSQL(createTable5SQL);
+}
+
+    // Method to add a new user
     public void addUser(String name, int age, String gender, String username, String password) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -84,53 +99,73 @@ public class Database extends SQLiteOpenHelper {
         values.put(AGE_COL, age);
         values.put(GENDER_COL, gender);
         values.put(USERNAME_COL, username);
-        values.put(PASSWORD_COL, hashPassword(password));
+        values.put(PASSWORD_COL, password);
         db.insert(TABLE_NAME, null, values);
+        db.close();  // close the database to free up resources
+    }
+
+    // Method to update user information, need some modification, update each field sololy
+    public void updateUser(int id, String name, int age, String gender, String username, String password) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(NAME_COL, name);
+        values.put(AGE_COL, age);
+        values.put(GENDER_COL, gender);
+        values.put(USERNAME_COL, username);
+        values.put(PASSWORD_COL, password);
+        db.update(TABLE_NAME, values, USERINFO_ID_COL + " = ?", new String[]{String.valueOf(id)});
         db.close();
     }
 
-    public void addNotes(String date, String user, String notes, boolean exercise, boolean social, boolean homework, boolean sleep, boolean eat) {
+    // Method to add a private post
+    public void addPrivatePost(int userId, String post, String date) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(DATE_COl, date);
-        values.put(USERNAME_COL, user);
-        values.put(NOTES_COL, notes);
-        values.put(EXERCISE_COL, exercise);
-        values.put(SOCIAL_COL, social);
-        values.put(HOMEWORK_COL, homework);
-        values.put(SLEEP_COL, sleep);
-        values.put(EAT_COL, eat);
+        values.put(USER_PRIVATEPOST_COL, userId);
+        values.put(PRIVATE_POST_COL, post);
+        values.put(DATE_PRIVATEPOST_COL, date);
         db.insert(TABLE2_NAME, null, values);
         db.close();
     }
 
-    public void addMood(String username, String date, int mood, int anxiety, int onMedicine, int takeMedicine){
+    // Method to add a public post
+    public void addPublicPost(int userId, String post, String date) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(DATE_COl, date);
-        values.put(MOOD_USER, username);
-        values.put(MOOD_COL, mood);
-        values.put(ANXIETY_COL, anxiety);
-        values.put(ON_MEDICINE_COL, onMedicine);
-        values.put(TAKE_MEDICINE_COL, takeMedicine);
+        values.put(USER_PUBLICPOST_COL, userId);
+        values.put(PUBLIC_POST_COL, post);
+        values.put(DATE_PUBLICPOST_COL, date);
         db.insert(TABLE3_NAME, null, values);
         db.close();
     }
 
-    public int getLastIdMood(String username) {
-        int result = -1;
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE3_NAME, new String[]{ID_COL, USERNAME_COL},
-                USERNAME_COL + "=?", new String[]{username}, null, null, null);
-        if(cursor!=null && cursor.moveToLast()) {
-            int idIndex = cursor.getColumnIndex(ID_COL);
-            if (idIndex != -1) {
-                result = cursor.getInt(idIndex);
-                cursor.close();
-            }
-        }
-        return result;
+    // Method to add a friend to the Friendzone table
+    public void addFriend(int userId, int friendId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(USER_FRIENDZONE_COL, userId);
+        values.put(FRIEND_FRIENDZONE_COL, friendId);
+        db.insert(TABLE4_NAME, null, values);
+        db.close();
     }
+
+    // Method to add a friend request
+    public void addFriendRequest(int userId, int friendId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(USER_COL, userId);
+        values.put(FRIEND_COL, friendId);
+        db.insert(TABLE5_NAME, null, values);
+        db.close();
+    }
+
+    // Method to delete a friend request
+    public void deleteFriendRequest(int userId, int friendId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE5_NAME, USER_COL + " = ? AND " + FRIEND_COL + " = ?", new String[]{String.valueOf(userId), String.valueOf(friendId)});
+        db.close();
+    }
+
 
 
     //unused methods, were used in old versions
