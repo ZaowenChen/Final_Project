@@ -94,7 +94,7 @@
 
             <Button
                 android:id="@+id/friends"
-                android:layout_width="100dp"
+                android:layout_width="wrap_content"
                 android:layout_height="80dp"
                 android:layout_below="@+id/profile"
                 android:backgroundTint="@color/light_blue"

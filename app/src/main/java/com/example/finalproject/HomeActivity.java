@@ -64,8 +64,12 @@ public class HomeActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        // Disable back pressed
+        // Close app when back pressed
         Log.d("Home Activity", "onBackPressed: was pressed ");
+        Intent a = new Intent(Intent.ACTION_MAIN);
+        a.addCategory(Intent.CATEGORY_HOME);
+        a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(a);
 
     }
     private void navigateToFragment(Fragment fragment) {
