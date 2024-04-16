@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import org.w3c.dom.Text;
 
@@ -35,6 +37,10 @@ public class HomeActivity extends AppCompatActivity {
         global.setBackgroundColor(Color.parseColor("#BDE0FE"));
         friends_post.setBackgroundColor(Color.parseColor("#FFFFFF"));
 
+        Log.d("HomeActivity", "onCreate: adding fragment for global post");
+        navigateToFragment(PublicFragment.newInstance());
+
+
         global.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -59,6 +65,12 @@ public class HomeActivity extends AppCompatActivity {
         // Disable back pressed
         Log.d("Home Activity", "onBackPressed: was pressed ");
 
+    }
+    private void navigateToFragment(Fragment fragment) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.postfrag, fragment); // Make sure this container ID matches your layout
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
 }
