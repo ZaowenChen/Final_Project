@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -37,28 +38,38 @@ public class PrivateFragment extends Fragment {
      * @return A new instance of fragment PrivateFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static PrivateFragment newInstance(String param1, String param2) {
-        PrivateFragment fragment = new PrivateFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
+//    public static PrivateFragment newInstance(String param1, String param2) {
+//        PrivateFragment fragment = new PrivateFragment();
+//        Bundle args = new Bundle();
+//        args.putString(ARG_PARAM1, param1);
+//        args.putString(ARG_PARAM2, param2);
+//        fragment.setArguments(args);
+//        return fragment;
+//    }
+
+    public static PrivateFragment newInstance() {
+        return new PrivateFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+//        if (getArguments() != null) {
+//            mParam1 = getArguments().getString(ARG_PARAM1);
+//            mParam2 = getArguments().getString(ARG_PARAM2);
+//        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_private, container, false);
+        View view =  inflater.inflate(R.layout.fragment_private, container, false);
+
+        //Set content
+        TextView content = view.findViewById(R.id.private_postcontent);
+        content.setText("Private Content");
+
+        return view;
     }
 }

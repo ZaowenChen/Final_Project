@@ -46,6 +46,7 @@ public class HomeActivity extends AppCompatActivity {
             public void onClick(View v) {
                 global.setBackgroundColor(Color.parseColor("#BDE0FE"));
                 friends_post.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                navigateToFragment(PublicFragment.newInstance());
             }
         });
 
@@ -54,6 +55,7 @@ public class HomeActivity extends AppCompatActivity {
             public void onClick(View v) {
                 friends_post.setBackgroundColor(Color.parseColor("#BDE0FE"));
                 global.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                navigateToFragment(PrivateFragment.newInstance());
             }
         });
 
