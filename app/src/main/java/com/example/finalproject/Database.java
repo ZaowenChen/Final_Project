@@ -169,58 +169,58 @@ public class Database extends SQLiteOpenHelper {
 
 
     //unused methods, were used in old versions
-    public ArrayList<Integer> getMoodValues(int id) {
-        ArrayList<Integer> result = new ArrayList<Integer>();
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE3_NAME, null,
-                ID_COL + "=?", new String[]{Integer.toString(id)}, null, null, null);
-        if(cursor != null && cursor.moveToFirst()) {
-            int moodIndex = cursor.getColumnIndex(MOOD_COL);
-            int anxietyIndex = cursor.getColumnIndex(ANXIETY_COL);
-            int onMedIndex = cursor.getColumnIndex(ON_MEDICINE_COL);
-            int takenMedIndex = cursor.getColumnIndex(TAKE_MEDICINE_COL);
-            if (moodIndex != -1 && anxietyIndex != -1 && onMedIndex != -1 && takenMedIndex != -1) {
-                result.add(cursor.getInt(moodIndex));
-                result.add(cursor.getInt(anxietyIndex));
-                result.add(cursor.getInt(onMedIndex));
-                result.add(cursor.getInt(takenMedIndex));
-            }
-            cursor.close();
-        }
-        return result;
-    }
-
-    public void setMoodRating(int id, int value) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        String query = "UPDATE " + TABLE3_NAME + " SET " + MOOD_COL + "=" + value + " WHERE " +
-                ID_COL + "=" + id;
-        db.execSQL(query);
-        db.close();
-    }
-
-    public void setMoodAnxiety(int id, int value) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        String query = "UPDATE " + TABLE3_NAME + " SET " + ANXIETY_COL + "=" + value + " WHERE " +
-                ID_COL + "=" + id;
-        db.execSQL(query);
-        db.close();
-    }
-
-    public void setMoodOnMed(int id, int value) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        String query = "UPDATE " + TABLE3_NAME + " SET " + ON_MEDICINE_COL + "=" + value + " WHERE " +
-                ID_COL + "=" + id;
-        db.execSQL(query);
-        db.close();
-    }
-
-    public void setMoodTakeMed(int id, int value) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        String query = "UPDATE " + TABLE3_NAME + " SET " + TAKE_MEDICINE_COL + "=" + value + " WHERE " +
-                ID_COL + "=" + id;
-        db.execSQL(query);
-        db.close();
-    }
+//    public ArrayList<Integer> getMoodValues(int id) {
+//        ArrayList<Integer> result = new ArrayList<Integer>();
+//        SQLiteDatabase db = this.getReadableDatabase();
+//        Cursor cursor = db.query(TABLE3_NAME, null,
+//                ID_COL + "=?", new String[]{Integer.toString(id)}, null, null, null);
+//        if(cursor != null && cursor.moveToFirst()) {
+//            int moodIndex = cursor.getColumnIndex(MOOD_COL);
+//            int anxietyIndex = cursor.getColumnIndex(ANXIETY_COL);
+//            int onMedIndex = cursor.getColumnIndex(ON_MEDICINE_COL);
+//            int takenMedIndex = cursor.getColumnIndex(TAKE_MEDICINE_COL);
+//            if (moodIndex != -1 && anxietyIndex != -1 && onMedIndex != -1 && takenMedIndex != -1) {
+//                result.add(cursor.getInt(moodIndex));
+//                result.add(cursor.getInt(anxietyIndex));
+//                result.add(cursor.getInt(onMedIndex));
+//                result.add(cursor.getInt(takenMedIndex));
+//            }
+//            cursor.close();
+//        }
+//        return result;
+//    }
+//
+//    public void setMoodRating(int id, int value) {
+//        SQLiteDatabase db = this.getWritableDatabase();
+//        String query = "UPDATE " + TABLE3_NAME + " SET " + MOOD_COL + "=" + value + " WHERE " +
+//                ID_COL + "=" + id;
+//        db.execSQL(query);
+//        db.close();
+//    }
+//
+//    public void setMoodAnxiety(int id, int value) {
+//        SQLiteDatabase db = this.getWritableDatabase();
+//        String query = "UPDATE " + TABLE3_NAME + " SET " + ANXIETY_COL + "=" + value + " WHERE " +
+//                ID_COL + "=" + id;
+//        db.execSQL(query);
+//        db.close();
+//    }
+//
+//    public void setMoodOnMed(int id, int value) {
+//        SQLiteDatabase db = this.getWritableDatabase();
+//        String query = "UPDATE " + TABLE3_NAME + " SET " + ON_MEDICINE_COL + "=" + value + " WHERE " +
+//                ID_COL + "=" + id;
+//        db.execSQL(query);
+//        db.close();
+//    }
+//
+//    public void setMoodTakeMed(int id, int value) {
+//        SQLiteDatabase db = this.getWritableDatabase();
+//        String query = "UPDATE " + TABLE3_NAME + " SET " + TAKE_MEDICINE_COL + "=" + value + " WHERE " +
+//                ID_COL + "=" + id;
+//        db.execSQL(query);
+//        db.close();
+//    }
 
 
     public String getName(String username) {
@@ -261,12 +261,12 @@ public class Database extends SQLiteOpenHelper {
 //        return result;
 //    }
 
-    public void deleteNotes(int id) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE2_NAME, ID_COL + " = " + Integer.toString(id), null);
-        db.close();
-        return;
-    }
+//    public void deleteNotes(int id) {
+//        SQLiteDatabase db = this.getWritableDatabase();
+//        db.delete(TABLE2_NAME, ID_COL + " = " + Integer.toString(id), null);
+//        db.close();
+//        return;
+//    }
 
     private String hashPassword(String password) {
         try {

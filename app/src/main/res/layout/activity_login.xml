@@ -25,11 +25,11 @@
 
         <TextView
             android:id="@+id/textView2"
-            android:layout_width="60sp"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:paddingHorizontal="20dp"
-            android:text="Email:"
+            android:paddingHorizontal="10dp"
+            android:text="Username:"
             android:textAlignment="textEnd"
             android:textSize="20sp" />
 
@@ -39,7 +39,7 @@
             android:layout_height="48dp"
             android:layout_weight="1"
             android:ems="10"
-            android:hint="Email Address"
+            android:hint="Must be 5 characters"
             android:inputType="textEmailAddress" />
     </LinearLayout>
 
@@ -50,7 +50,7 @@
 
         <TextView
             android:id="@+id/txtview"
-            android:layout_width="60sp"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:paddingHorizontal="10dp"
