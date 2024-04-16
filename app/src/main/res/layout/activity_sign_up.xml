@@ -19,6 +19,7 @@
             android:paddingVertical="10sp"
             android:text="Sign Up"
             android:textAlignment="center"
+            android:background="@color/light_blue"
             android:textAppearance="@style/TextAppearance.AppCompat.Display1"
             android:textSize="30sp"
             android:textStyle="bold" />
@@ -76,14 +77,25 @@
                 android:hint="Password" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <Button
-            android:id="@+id/buttonSignUp"
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.5"
-            android:backgroundTint="@color/blue"
-            android:text="Sign Up"
-            android:textColor="@color/raisin" />
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="5dp">
+
+            <Button
+                android:id="@+id/buttonSignUp"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_weight="0.5"
+                android:backgroundTint="@color/blue"
+                android:text="Sign Up"
+                android:textColor="@color/black" />
+
+        </RelativeLayout>
+
+
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
