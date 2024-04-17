@@ -45,22 +45,21 @@
 
         <TextView
             android:id="@+id/info1_1"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:paddingHorizontal="8sp"
-            android:text="[INFO1]:"
+            android:text="Bio:"
             android:textAlignment="textEnd"
             android:textSize="16sp" />
 
-        <EditText
-            android:id="@+id/info1_2"
-            android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/info1_change"
+            android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:layout_weight="3"
-            android:hint="[user's INFO1]"
+            android:layout_weight="1"
             android:paddingHorizontal="8sp"
-            android:text="[user's INFO1]"
+            android:text="NA"
             android:textAlignment="viewStart"
             android:textSize="16sp" />
     </LinearLayout>
@@ -72,22 +71,21 @@
 
         <TextView
             android:id="@+id/info2_1"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:paddingHorizontal="8sp"
-            android:text="[INFO2]:"
+            android:text="Birthday:"
             android:textAlignment="textEnd"
             android:textSize="16sp" />
 
-        <EditText
-            android:id="@+id/info2_2"
-            android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/info2_change"
+            android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:layout_weight="3"
-            android:hint="[user's INFO2]"
+            android:layout_weight="1"
             android:paddingHorizontal="8sp"
-            android:text="[user's INFO2]"
+            android:text="NA"
             android:textAlignment="textStart"
             android:textSize="16sp" />
     </LinearLayout>
@@ -99,25 +97,23 @@
 
         <TextView
             android:id="@+id/info3_1"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:paddingHorizontal="8sp"
-            android:text="[INFO3]:"
+            android:text="Online around:"
             android:textAlignment="textEnd"
             android:textSize="16sp" />
 
-        <EditText
-            android:id="@+id/info3_2"
-            android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/info3_change"
+            android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:layout_weight="3"
-            android:hint="[user's INFO3]"
+            android:layout_weight="1"
             android:paddingHorizontal="8sp"
-            android:text="[user's INFO3]"
+            android:text="NA"
             android:textAlignment="textStart"
             android:textSize="16sp" />
-
     </LinearLayout>
 
     <RelativeLayout
@@ -126,14 +122,14 @@
         android:paddingHorizontal="5dp">
 
         <Button
-            android:id="@+id/buttonCommit"
+            android:id="@+id/buttonChange"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_weight="0.5"
             android:backgroundTint="@color/blue"
-            android:text="Commit Changes"
+            android:text="Edit Profile"
             android:textColor="@color/black" />
 
     </RelativeLayout>

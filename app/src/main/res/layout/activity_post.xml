@@ -52,7 +52,7 @@
         android:paddingHorizontal="5dp">
 
         <Button
-            android:id="@+id/buttonCommit"
+            android:id="@+id/buttonChange"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
