@@ -46,6 +46,37 @@
         android:paddingVertical="10dp"
         android:textSize="16sp" />
 
+    <TextView
+        android:id="@+id/postviewtext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/border"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="10dp"
+        android:text="Post View"
+        android:textSize="16sp" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <CheckBox
+            android:id="@+id/globalcheckbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="10dp"
+            android:text="Global" />
+
+        <CheckBox
+            android:id="@+id/friendsCheckbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="10dp"
+            android:text="Friends" />
+    </LinearLayout>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -55,8 +86,8 @@
             android:id="@+id/buttonChange"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
             android:layout_weight="0.5"
             android:backgroundTint="@color/blue"
             android:text="Post"
