@@ -24,7 +24,8 @@
         android:id="@+id/profilePic"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@tools:sample/avatars" />
+        android:adjustViewBounds="true"
+        android:src="@drawable/character_header_yoshi" />
 
     <TextView
         android:id="@+id/textView"
