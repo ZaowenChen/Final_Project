@@ -123,6 +123,25 @@ public class Database extends SQLiteOpenHelper {
         return rows > 0;
     }
 
+    public boolean isPasswordCorrect(String username, String password) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String hashedPassword = hashPassword(password);
+        Cursor cursor = db.query(TABLE_NAME, new String[]{PASSWORD_COL}, USERNAME_COL + "=? AND " + PASSWORD_COL + "=?", new String[]{username, hashedPassword}, null, null, null);
+        boolean exists = cursor.getCount() > 0;
+        cursor.close();
+        db.close();
+        return exists;
+    }
+
+    public boolean updatePassword(String username, String newPassword) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        String hashedPassword = hashPassword(newPassword);
+        contentValues.put(PASSWORD_COL, hashedPassword);
+        int rows = db.update(TABLE_NAME, contentValues, USERNAME_COL + "=?", new String[]{username});
+        db.close();
+        return rows > 0;
+    }
 
 
     // Method to add a private post

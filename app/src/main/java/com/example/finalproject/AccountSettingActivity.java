@@ -39,6 +39,8 @@ public class AccountSettingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_setting);
+        db = new Database(this, "UserDatabase.db");
+
 
         userOld = findViewById(R.id.userold);
         emailOld = findViewById(R.id.emailold);
