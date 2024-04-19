@@ -2,6 +2,7 @@ package com.example.finalproject;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -49,9 +50,12 @@ public class SignUpActivity extends AppCompatActivity {
                 if(validateUsername(username) && validatePassword(password)) {
                     saveUserInfo(name, address, username, password);
                     Toast.makeText(SignUpActivity.this, "Sign Up Successful", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
+                    saveUserInfoinShared(name, username);
+                    Intent intent = new Intent(SignUpActivity.this, SetUpProfileActivity.class);
+                    intent.putExtra("Username", username);
                     startActivity(intent);
                 }
+
             }
         });
     }
@@ -92,6 +96,16 @@ public class SignUpActivity extends AppCompatActivity {
 
     private void saveUserInfo(String name, String address, String username, String password) {
         db.addUser(name, username, password);
+    }
+
+
+    private void saveUserInfoinShared(String name, String username) {
+        SharedPreferences sharedPreferences = getSharedPreferences("UserInfo", MODE_PRIVATE); // access the shared preference
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        // Prefix each key with the username to ensure uniqueness
+        editor.putString(username + "_Name", name); // it would be stored as "zaowe_name : Zaowen"
+        editor.putString(username + "_Userame", username); // it would be stored as "zaowe_name : Zaowen"
+        editor.apply(); // apply to the shared preference
     }
 
 }
