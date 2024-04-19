@@ -10,8 +10,10 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class FriendsActivity extends AppCompatActivity {
 
@@ -58,6 +60,8 @@ public class FriendsActivity extends AppCompatActivity {
         Button add = findViewById(R.id.addFriend);
 
         EditText friendSearch = findViewById(R.id.friendSearch2);
+
+        HashSet<String> userSet = db.getUserSet();
 
         remove.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,7 +116,13 @@ public class FriendsActivity extends AppCompatActivity {
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                String friendName = friendSearch.getText().toString();
+                if(!userSet.contains(friendName)) {
+                    Toast.makeText(FriendsActivity.this, "Username not found.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                db.addFriendRequest(username, friendName);
+                Toast.makeText(FriendsActivity.this, "Friend request sent!", Toast.LENGTH_SHORT).show();
             }
         });
     }

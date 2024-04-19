@@ -10,6 +10,8 @@ import android.util.Log;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Database extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "UserDatabase.db";
@@ -155,8 +157,16 @@ public class Database extends SQLiteOpenHelper {
         db.close();
     }
 
+    // Method to remove a friend from the Friendzone table
+    public void removeFriend(String username, String friend) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE5_NAME, USER_COL + " = ? AND " + FRIEND_COL + " = ?", new String[]{username, friend});
+        db.close();
+    }
+
+
     // Method to add a friend request
-    public void addFriendRequest(int userId, int friendId) {
+    public void addFriendRequest(String userId, String friendId) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(USER_COL, userId);
@@ -171,6 +181,8 @@ public class Database extends SQLiteOpenHelper {
         db.delete(TABLE4_NAME, USER_COL + " = ? AND " + FRIEND_COL + " = ?", new String[]{username, friend});
         db.close();
     }
+
+
 
     public ArrayList<String> getFriends(String username) {
         ArrayList<String> result = new ArrayList<String>();
@@ -190,11 +202,6 @@ public class Database extends SQLiteOpenHelper {
         return result;
     }
 
-    public void removeFriend(String username, String friend) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE5_NAME, USER_COL + " = ? AND " + FRIEND_COL + " = ?", new String[]{username, friend});
-        db.close();
-    }
 
     public ArrayList<String> getFriendRequests(String username) {
         ArrayList<String> result = new ArrayList<String>();
@@ -212,6 +219,21 @@ public class Database extends SQLiteOpenHelper {
         }
         db.close();
         return result;
+    }
+
+    public HashSet<String> getUserSet() {
+        HashSet<String> userSet = new HashSet<String>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_NAME, new String[]{USER_COL},
+                null, null, null, null, null);
+        if(cursor != null) {
+            while(cursor.moveToNext()) {
+                userSet.add(cursor.getString(0));
+            }
+            cursor.close();
+        }
+        db.close();
+        return userSet;
     }
 
 
