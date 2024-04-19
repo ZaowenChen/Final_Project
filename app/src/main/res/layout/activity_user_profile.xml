@@ -24,7 +24,8 @@
         android:id="@+id/profilePic"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@tools:sample/avatars" />
+        android:adjustViewBounds="true"
+        android:src="@drawable/lion" />
 
     <TextView
         android:id="@+id/textView"
@@ -55,6 +56,32 @@
 
         <TextView
             android:id="@+id/info1_change"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:paddingHorizontal="8sp"
+            android:text="NA"
+            android:textAlignment="viewStart"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/gender_1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:paddingHorizontal="8sp"
+            android:text="Gender:"
+            android:textAlignment="textEnd"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/gender_change"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_weight="1"

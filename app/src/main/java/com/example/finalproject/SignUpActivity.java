@@ -14,7 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.textfield.TextInputLayout;
 
 public class SignUpActivity extends AppCompatActivity {
-    private EditText editTextName, editTextAge, editTextGender, editTextAddress, editTextUsername, editTextPassword;
+    private EditText editTextName, editTextEmail, editTextUsername, editTextPassword;
     private Button signUpButton;
     private TextInputLayout UsernameLayout, PasswordLayout;
     private Database db;
@@ -30,9 +30,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         // Initialize views
         editTextName = findViewById(R.id.Name);
-        editTextAge = findViewById(R.id.Email);
-        //editTextGender = findViewById(R.id.Gender);
-        //editTextAddress = findViewById(R.id.Address);
+        editTextEmail = findViewById(R.id.Email);
         editTextUsername = findViewById(R.id.Username);
         editTextPassword = findViewById(R.id.passwords);
         signUpButton = findViewById(R.id.buttonSignUp);
@@ -44,14 +42,12 @@ public class SignUpActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Log.d("SignUp", "onClick: signup");
                 String name = editTextName.getText().toString();
-                String gender = editTextGender.getText().toString();
-                String age = editTextAge.getText().toString();
-                String address = editTextAddress.getText().toString();
+                String address = editTextEmail.getText().toString();
                 String username = editTextUsername.getText().toString();
                 String password = editTextPassword.getText().toString();
 
                 if(validateUsername(username) && validatePassword(password)) {
-                    saveUserInfo(name, gender, age, address, username, password);
+                    saveUserInfo(name, address, username, password);
                     Toast.makeText(SignUpActivity.this, "Sign Up Successful", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
                     startActivity(intent);
@@ -66,7 +62,7 @@ public class SignUpActivity extends AppCompatActivity {
             if (!db.isUsernameExists(username)) {
                 return true;
             } else {
-                UsernameLayout.setError("The username exits!"); // required alert in the text input layout
+                UsernameLayout.setError("The username exists!"); // required alert in the text input layout
                 return false;
             }
         } else {
@@ -94,8 +90,8 @@ public class SignUpActivity extends AppCompatActivity {
         }
     }
 
-    private void saveUserInfo(String name, String gender, String age, String address, String username, String password) {
-        db.addUser(name, Integer.parseInt(age), gender, username, password);
+    private void saveUserInfo(String name, String address, String username, String password) {
+        db.addUser(name, username, password);
     }
 
 }
