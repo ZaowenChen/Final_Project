@@ -20,7 +20,7 @@ public class Database extends SQLiteOpenHelper {
     private static final String NAME_COL = "name";
     private static final String USERNAME_COL = "username";
     private static final String PASSWORD_COL = "password";
-    private static final String EMIAL_COL = "Email";
+    private static final String EMAIL_COL = "Email";
 
     private static final String TABLE2_NAME = "PrivatePost";
     private static final String PRIVATEPOST_ID_COL = "Post_ID";
@@ -51,7 +51,7 @@ public class Database extends SQLiteOpenHelper {
                 USERINFO_ID_COL + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 NAME_COL + " TEXT, " +
                 USERNAME_COL + " TEXT, " +
-                EMIAL_COL + " TEXT, " +
+                EMAIL_COL + " TEXT, " +
                 PASSWORD_COL + " TEXT)";
 
         String createTable2SQL = "CREATE TABLE " + TABLE2_NAME + " (" +
@@ -100,16 +100,28 @@ public class Database extends SQLiteOpenHelper {
         db.close();
     }
 
-    // Method to update user information, need some modification, update each field sololy
-    public void updateUser(int id, String name, String username, String password) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(NAME_COL, name);
-        values.put(USERNAME_COL, username);
-        values.put(PASSWORD_COL, password);
-        db.update(TABLE_NAME, values, USERINFO_ID_COL + " = ?", new String[]{String.valueOf(id)});
-        db.close();
+    public String getEmailByUsername(String username) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_NAME, new String[]{EMAIL_COL}, USERNAME_COL + "=?", new String[]{username}, null, null, null);
+        if (cursor != null && cursor.moveToFirst()) {
+            String email = cursor.getString(0);
+            cursor.close();
+            db.close();
+            return email;
+        }
+        return null;
     }
+
+    public boolean updateEmail(String username, String newEmail) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(EMAIL_COL, newEmail);
+        int rows = db.update(TABLE_NAME, contentValues, USERNAME_COL + "=?", new String[]{username});
+        db.close();
+        return rows > 0;
+    }
+
+
 
     // Method to add a private post
     public void addPrivatePost(int userId, String post, String date) {
