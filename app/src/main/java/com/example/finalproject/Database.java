@@ -20,26 +20,27 @@ public class Database extends SQLiteOpenHelper {
     private static final String NAME_COL = "name";
     private static final String USERNAME_COL = "username";
     private static final String PASSWORD_COL = "password";
+    private static final String EMIAL_COL = "Email";
 
     private static final String TABLE2_NAME = "PrivatePost";
     private static final String PRIVATEPOST_ID_COL = "Post_ID";
-    private static final String USER_PRIVATEPOST_COL = "UserID";
+    private static final String USER_PRIVATEPOST_COL = "Username";
     private static final String PRIVATE_POST_COL = "Post";
     private static final String DATE_PRIVATEPOST_COL = "Date";
 
     private static final String TABLE3_NAME = "PublicPost";
     private static final String PUBLICPOST_ID_COL = "Post_ID";
-    private static final String USER_PUBLICPOST_COL = "UserID";
+    private static final String USER_PUBLICPOST_COL = "Username";
     private static final String PUBLIC_POST_COL = "Post";
     private static final String DATE_PUBLICPOST_COL = "Date";
 
     private static final String TABLE4_NAME = "Friendzone";
-    private static final String USER_FRIENDZONE_COL = "User_ID";
-    private static final String FRIEND_FRIENDZONE_COL = "Friend_ID";
+    private static final String USER_FRIENDZONE_COL = "Username";
+    private static final String FRIEND_FRIENDZONE_COL = "FriendUsername";
 
     private static final String TABLE5_NAME = "FriendRequest";
-    private static final String USER_COL = "User_ID";
-    private static final String FRIEND_COL = "Friend_ID";
+    private static final String USER_COL = "Username";
+    private static final String FRIEND_COL = "FriendUsername";
 
 
     public Database(Context context, String database) {super(context, DATABASE_NAME, null, DATABASE_VERSION);}
@@ -50,6 +51,7 @@ public class Database extends SQLiteOpenHelper {
                 USERINFO_ID_COL + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 NAME_COL + " TEXT, " +
                 USERNAME_COL + " TEXT, " +
+                EMIAL_COL + " TEXT, " +
                 PASSWORD_COL + " TEXT)";
 
         String createTable2SQL = "CREATE TABLE " + TABLE2_NAME + " (" +
