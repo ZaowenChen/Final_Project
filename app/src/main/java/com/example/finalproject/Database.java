@@ -146,7 +146,7 @@ public class Database extends SQLiteOpenHelper {
     }
 
     // Method to add a friend to the Friendzone table
-    public void addFriend(int userId, int friendId) {
+    public void addFriend(String userId, String friendId) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(USER_FRIENDZONE_COL, userId);
@@ -166,9 +166,9 @@ public class Database extends SQLiteOpenHelper {
     }
 
     // Method to delete a friend request
-    public void deleteFriendRequest(int userId, int friendId) {
+    public void deleteFriendRequest(String username, String friend) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE5_NAME, USER_COL + " = ? AND " + FRIEND_COL + " = ?", new String[]{String.valueOf(userId), String.valueOf(friendId)});
+        db.delete(TABLE4_NAME, USER_COL + " = ? AND " + FRIEND_COL + " = ?", new String[]{username, friend});
         db.close();
     }
 
@@ -186,7 +186,14 @@ public class Database extends SQLiteOpenHelper {
             }
             cursor.close();
         }
+        db.close();
         return result;
+    }
+
+    public void removeFriend(String username, String friend) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE5_NAME, USER_COL + " = ? AND " + FRIEND_COL + " = ?", new String[]{username, friend});
+        db.close();
     }
 
     public ArrayList<String> getFriendRequests(String username) {
@@ -203,8 +210,10 @@ public class Database extends SQLiteOpenHelper {
             }
             cursor.close();
         }
+        db.close();
         return result;
     }
+
 
     //unused methods, were used in old versions
 //    public ArrayList<Integer> getMoodValues(int id) {

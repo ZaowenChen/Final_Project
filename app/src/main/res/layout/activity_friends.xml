@@ -67,7 +67,7 @@
                     android:textSize="16sp" />
 
                 <Button
-                    android:id="@+id/addfriend"
+                    android:id="@+id/addFriend"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -91,6 +91,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"></LinearLayout>
+
+            <Button
+                android:id="@+id/removeFriend"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Remove Friends" />
 
             <TextView
                 android:id="@+id/friendRequestsHeader"
