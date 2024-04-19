@@ -133,16 +133,19 @@
                     android:textSize="16sp" />
             </LinearLayout>
 
-            <RadioGroup
-                android:id="@+id/radioGroupGender"
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingVertical="5dp">
+                android:orientation="horizontal">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <RadioGroup
+                    android:id="@+id/radioGroupGender"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:layout_weight="2"
+                    android:orientation="horizontal"
+                    android:paddingVertical="5dp">
 
                     <RadioButton
                         android:id="@+id/maleRadbtn"
@@ -171,20 +174,20 @@
 
                     </RadioButton>
 
-                    <Button
-                        android:id="@+id/genderChangeBtn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_weight="3"
-                        android:text="Change"
-                        android:textColor="@color/black">
+                </RadioGroup>
 
-                    </Button>
+                <Button
+                    android:id="@+id/genderChangeBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:text="Change"
+                    android:textColor="@color/black">
+
+                </Button>
 
 
-                </LinearLayout>
-
-            </RadioGroup>
+            </LinearLayout>
 
 
             <LinearLayout
