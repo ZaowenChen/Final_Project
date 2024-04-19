@@ -161,6 +161,7 @@ public class Database extends SQLiteOpenHelper {
     public void removeFriend(String username, String friend) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE5_NAME, USER_COL + " = ? AND " + FRIEND_COL + " = ?", new String[]{username, friend});
+        db.delete(TABLE5_NAME, FRIEND_COL + " = ? AND " + USER_COL + " = ?", new String[]{username, friend});
         db.close();
     }
 
@@ -190,13 +191,24 @@ public class Database extends SQLiteOpenHelper {
         Cursor cursor = db.query(TABLE4_NAME, null, USER_COL + "=?",
                 new String[]{username}, null, null, null);
         if(cursor != null) {
-            int friendIndex = cursor.getColumnIndex(FRIEND_FRIENDZONE_COL);
+            int friendIndex = cursor.getColumnIndex(FRIEND_COL);
             if(friendIndex!= -1) {
                 while(cursor.moveToNext()) {
                     result.add(cursor.getString(friendIndex));
                 }
             }
             cursor.close();
+        }
+        Cursor cursor1 = db.query(TABLE4_NAME, null, FRIEND_COL + "=?",
+                new String[]{username}, null, null, null);
+        if(cursor1 != null) {
+            int friendIndex = cursor1.getColumnIndex(USER_COL);
+            if(friendIndex!= -1) {
+                while(cursor1.moveToNext()) {
+                    result.add(cursor1.getString(friendIndex));
+                }
+            }
+            cursor1.close();
         }
         db.close();
         return result;
