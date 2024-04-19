@@ -35,7 +35,7 @@ public class LoginActivity extends AppCompatActivity {
                 String currUsername = usernameInp.getText().toString();
                 String currPassword = passwordInp.getText().toString();
 
-                boolean isValid = db.validateUser(currUsername, currPassword); // This method needs to be implemented in your DBClass
+                boolean isValid = db.validateUser(currUsername, currPassword);
 
                 if(isValid) {
                     Log.d("Login ===", "username valid");

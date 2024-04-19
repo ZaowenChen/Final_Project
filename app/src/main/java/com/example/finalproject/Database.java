@@ -101,7 +101,7 @@ public class Database extends SQLiteOpenHelper {
         values.put(USERNAME_COL, username);
         values.put(PASSWORD_COL, password);
         db.insert(TABLE_NAME, null, values);
-        db.close();  // close the database to free up resources
+        db.close();
     }
 
     // Method to update user information, need some modification, update each field sololy
