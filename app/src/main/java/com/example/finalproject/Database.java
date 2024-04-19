@@ -189,6 +189,23 @@ public class Database extends SQLiteOpenHelper {
         return result;
     }
 
+    public ArrayList<String> getFriendRequests(String username) {
+        ArrayList<String> result = new ArrayList<String>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE5_NAME, null, FRIEND_COL + "=?",
+                new String[]{username}, null, null, null);
+        if(cursor != null) {
+            int senderIndex = cursor.getColumnIndex(USER_COL);
+            if(senderIndex!= -1) {
+                while(cursor.moveToNext()) {
+                    result.add(cursor.getString(senderIndex));
+                }
+            }
+            cursor.close();
+        }
+        return result;
+    }
+
     //unused methods, were used in old versions
 //    public ArrayList<Integer> getMoodValues(int id) {
 //        ArrayList<Integer> result = new ArrayList<Integer>();

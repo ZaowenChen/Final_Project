@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.LinearLayout;
 
+import java.util.ArrayList;
+
 public class FriendsActivity extends AppCompatActivity {
 
     private Database db;
@@ -21,6 +23,8 @@ public class FriendsActivity extends AppCompatActivity {
         LinearLayout friendsLayout = findViewById(R.id.friendslayout);
         LinearLayout requestsLayout = findViewById(R.id.requestlayout);
 
+        ArrayList<String> friendsList = db.getFriends(username);
+        ArrayList<String> requestsList = db.getFriendRequests(username);
 
     }
 }
