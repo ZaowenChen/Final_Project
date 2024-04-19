@@ -10,6 +10,8 @@ import android.util.Log;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Database extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "UserDatabase.db";
@@ -20,7 +22,7 @@ public class Database extends SQLiteOpenHelper {
     private static final String NAME_COL = "name";
     private static final String USERNAME_COL = "username";
     private static final String PASSWORD_COL = "password";
-    private static final String EMIAL_COL = "Email";
+    private static final String EMAIL_COL = "Email";
 
     private static final String TABLE2_NAME = "PrivatePost";
     private static final String PRIVATEPOST_ID_COL = "Post_ID";
@@ -51,7 +53,7 @@ public class Database extends SQLiteOpenHelper {
                 USERINFO_ID_COL + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 NAME_COL + " TEXT, " +
                 USERNAME_COL + " TEXT, " +
-                EMIAL_COL + " TEXT, " +
+                EMAIL_COL + " TEXT, " +
                 PASSWORD_COL + " TEXT)";
 
         String createTable2SQL = "CREATE TABLE " + TABLE2_NAME + " (" +
@@ -100,16 +102,47 @@ public class Database extends SQLiteOpenHelper {
         db.close();
     }
 
-    // Method to update user information, need some modification, update each field sololy
-    public void updateUser(int id, String name, String username, String password) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(NAME_COL, name);
-        values.put(USERNAME_COL, username);
-        values.put(PASSWORD_COL, password);
-        db.update(TABLE_NAME, values, USERINFO_ID_COL + " = ?", new String[]{String.valueOf(id)});
-        db.close();
+    public String getEmailByUsername(String username) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_NAME, new String[]{EMAIL_COL}, USERNAME_COL + "=?", new String[]{username}, null, null, null);
+        if (cursor != null && cursor.moveToFirst()) {
+            String email = cursor.getString(0);
+            cursor.close();
+            db.close();
+            return email;
+        }
+        return null;
     }
+
+    public boolean updateEmail(String username, String newEmail) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(EMAIL_COL, newEmail);
+        int rows = db.update(TABLE_NAME, contentValues, USERNAME_COL + "=?", new String[]{username});
+        db.close();
+        return rows > 0;
+    }
+
+    public boolean isPasswordCorrect(String username, String password) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String hashedPassword = hashPassword(password);
+        Cursor cursor = db.query(TABLE_NAME, new String[]{PASSWORD_COL}, USERNAME_COL + "=? AND " + PASSWORD_COL + "=?", new String[]{username, hashedPassword}, null, null, null);
+        boolean exists = cursor.getCount() > 0;
+        cursor.close();
+        db.close();
+        return exists;
+    }
+
+    public boolean updatePassword(String username, String newPassword) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        String hashedPassword = hashPassword(newPassword);
+        contentValues.put(PASSWORD_COL, hashedPassword);
+        int rows = db.update(TABLE_NAME, contentValues, USERNAME_COL + "=?", new String[]{username});
+        db.close();
+        return rows > 0;
+    }
+
 
     // Method to add a private post
     public void addPrivatePost(int userId, String post, String date) {
@@ -134,7 +167,7 @@ public class Database extends SQLiteOpenHelper {
     }
 
     // Method to add a friend to the Friendzone table
-    public void addFriend(int userId, int friendId) {
+    public void addFriend(String userId, String friendId) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(USER_FRIENDZONE_COL, userId);
@@ -143,8 +176,17 @@ public class Database extends SQLiteOpenHelper {
         db.close();
     }
 
+    // Method to remove a friend from the Friendzone table
+    public void removeFriend(String username, String friend) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE5_NAME, USER_COL + " = ? AND " + FRIEND_COL + " = ?", new String[]{username, friend});
+        db.delete(TABLE5_NAME, FRIEND_COL + " = ? AND " + USER_COL + " = ?", new String[]{username, friend});
+        db.close();
+    }
+
+
     // Method to add a friend request
-    public void addFriendRequest(int userId, int friendId) {
+    public void addFriendRequest(String userId, String friendId) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(USER_COL, userId);
@@ -154,12 +196,76 @@ public class Database extends SQLiteOpenHelper {
     }
 
     // Method to delete a friend request
-    public void deleteFriendRequest(int userId, int friendId) {
+    public void deleteFriendRequest(String username, String friend) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE5_NAME, USER_COL + " = ? AND " + FRIEND_COL + " = ?", new String[]{String.valueOf(userId), String.valueOf(friendId)});
+        db.delete(TABLE4_NAME, USER_COL + " = ? AND " + FRIEND_COL + " = ?", new String[]{username, friend});
         db.close();
     }
 
+
+
+    public ArrayList<String> getFriends(String username) {
+        ArrayList<String> result = new ArrayList<String>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE4_NAME, null, USER_COL + "=?",
+                new String[]{username}, null, null, null);
+        if(cursor != null) {
+            int friendIndex = cursor.getColumnIndex(FRIEND_COL);
+            if(friendIndex!= -1) {
+                while(cursor.moveToNext()) {
+                    result.add(cursor.getString(friendIndex));
+                }
+            }
+            cursor.close();
+        }
+        Cursor cursor1 = db.query(TABLE4_NAME, null, FRIEND_COL + "=?",
+                new String[]{username}, null, null, null);
+        if(cursor1 != null) {
+            int friendIndex = cursor1.getColumnIndex(USER_COL);
+            if(friendIndex!= -1) {
+                while(cursor1.moveToNext()) {
+                    result.add(cursor1.getString(friendIndex));
+                }
+            }
+            cursor1.close();
+        }
+        db.close();
+        return result;
+    }
+
+
+    public ArrayList<String> getFriendRequests(String username) {
+        ArrayList<String> result = new ArrayList<String>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE5_NAME, null, FRIEND_COL + "=?",
+                new String[]{username}, null, null, null);
+        if(cursor != null) {
+            int senderIndex = cursor.getColumnIndex(USER_COL);
+            if(senderIndex!= -1) {
+                while(cursor.moveToNext()) {
+                    result.add(cursor.getString(senderIndex));
+                }
+            }
+            cursor.close();
+        }
+        db.close();
+        return result;
+    }
+
+    public HashSet<String> getUserSet() {
+        HashSet<String> userSet = new HashSet<String>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_NAME, new String[]{USER_COL},
+                null, null, null, null, null);
+        if(cursor != null) {
+            while(cursor.moveToNext()) {
+                userSet.add(cursor.getString(0));
+            }
+            cursor.close();
+        }
+        db.close();
+        return userSet;
+    }
 
 
     //unused methods, were used in old versions
