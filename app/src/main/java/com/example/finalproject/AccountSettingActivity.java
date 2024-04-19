@@ -90,8 +90,12 @@ public class AccountSettingActivity extends AppCompatActivity {
 
     private void saveLogoutTime() throws JSONException, IOException {
         String filename = "logout_time.json";
-        String myDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + "/" + filename;
+        String myDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + "/Documents/" + filename;
         File file = new File(myDir);
+        if (!file.exists()) {
+            file.createNewFile();
+        }
+
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
         String logoutTime = sdf.format(new Date());
 
