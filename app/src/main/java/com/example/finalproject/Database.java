@@ -18,8 +18,6 @@ public class Database extends SQLiteOpenHelper {
     private static final String TABLE_NAME = "Userinfo";
     private static final String USERINFO_ID_COL = "id";
     private static final String NAME_COL = "name";
-    private static final String AGE_COL = "age";
-    private static final String GENDER_COL = "gender";
     private static final String USERNAME_COL = "username";
     private static final String PASSWORD_COL = "password";
 
@@ -51,8 +49,6 @@ public class Database extends SQLiteOpenHelper {
         String createTableSQL = "CREATE TABLE " + TABLE_NAME + " (" +
                 USERINFO_ID_COL + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 NAME_COL + " TEXT, " +
-                AGE_COL + " INTEGER, " +
-                GENDER_COL + " TEXT, " +
                 USERNAME_COL + " TEXT, " +
                 PASSWORD_COL + " TEXT)";
 
@@ -92,25 +88,21 @@ public class Database extends SQLiteOpenHelper {
 }
 
     // Method to add a new user
-    public void addUser(String name, int age, String gender, String username, String password) {
+    public void addUser(String name,  String username, String password) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(NAME_COL, name);
-        values.put(AGE_COL, age);
-        values.put(GENDER_COL, gender);
         values.put(USERNAME_COL, username);
-        values.put(PASSWORD_COL, password);
+        values.put(PASSWORD_COL, hashPassword(password));
         db.insert(TABLE_NAME, null, values);
         db.close();  // close the database to free up resources
     }
 
     // Method to update user information, need some modification, update each field sololy
-    public void updateUser(int id, String name, int age, String gender, String username, String password) {
+    public void updateUser(int id, String name, String username, String password) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(NAME_COL, name);
-        values.put(AGE_COL, age);
-        values.put(GENDER_COL, gender);
         values.put(USERNAME_COL, username);
         values.put(PASSWORD_COL, password);
         db.update(TABLE_NAME, values, USERINFO_ID_COL + " = ?", new String[]{String.valueOf(id)});
