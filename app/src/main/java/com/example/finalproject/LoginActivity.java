@@ -8,6 +8,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.Manifest;
+import android.content.pm.PackageManager;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
+
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -25,6 +31,8 @@ public class LoginActivity extends AppCompatActivity {
 
         Button submit = findViewById(R.id.login);
         Button signUp = findViewById(R.id.newuser);
+        requestAppPermissions();
+
 
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,6 +66,13 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(returnSignup);
             }
         });
+    }
+    private void requestAppPermissions() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+            }, 0);
+        }
     }
 //    @Override
 //    public void onBackPressed() {
