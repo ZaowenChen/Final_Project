@@ -42,6 +42,19 @@ public class FriendsActivity extends AppCompatActivity {
             for (String friend : friendsList) {
                 TextView tx = new TextView(this);
                 tx.setText(friend);
+                tx.setTextSize(16);
+                tx.setPadding(20,5,0,5);
+
+                tx.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(FriendsActivity.this, FriendProfileActivity.class);
+                        intent.putExtra("Friend", friend);
+                        intent.putExtra("Username", username);
+                        startActivity(intent);
+                    }
+                });
+
                 friendsLayout.addView(tx);
             }
         }
