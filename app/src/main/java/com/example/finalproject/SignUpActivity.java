@@ -95,7 +95,7 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void saveUserInfo(String name, String address, String username, String password) {
-        db.addUser(name, username, password);
+        db.addUser(name, address, username, password);
     }
 
 

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
@@ -14,6 +15,7 @@ import java.util.Locale;
 public class PostActivity extends AppCompatActivity {
     private Database db;
     private EditText noteInput;
+    private TextView usernameView;
     private CheckBox globalCheckbox, friendsCheckbox;
     private Button postButton;
     private String username;
@@ -22,11 +24,14 @@ public class PostActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
         db = new Database(this, "UserDatabase.db");
-        username = getIntent().getStringExtra("username");
+        username = getIntent().getStringExtra("Username");
         noteInput = findViewById(R.id.note_input);
         globalCheckbox = findViewById(R.id.globalcheckbox);
         friendsCheckbox = findViewById(R.id.friendsCheckbox);
         postButton = findViewById(R.id.buttonChange);
+        usernameView = findViewById(R.id.username); // TextView for displaying the username
+        usernameView.setText(username);
+
 
         setupCheckboxListeners();
 

@@ -20,6 +20,8 @@ public class HomeActivity extends AppCompatActivity {
 
     private Database db;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +62,29 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        Button post = findViewById(R.id.post);
+        post.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent postIntent = new Intent(HomeActivity.this, PostActivity.class);
+                postIntent.putExtra("Username", username);
+                startActivity(postIntent);
+
+            }
+        });
+
+
+        Button settings = findViewById(R.id.settings);
+        settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent Settingintent = new Intent(HomeActivity.this, AccountSettingActivity.class);
+                Settingintent.putExtra("Username", username);
+                startActivity(Settingintent);
+            }
+        });
+
+
         Button profile = findViewById(R.id.profile);
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,7 +106,6 @@ public class HomeActivity extends AppCompatActivity {
         a.addCategory(Intent.CATEGORY_HOME);
         a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(a);
-
     }
     private void navigateToFragment(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();

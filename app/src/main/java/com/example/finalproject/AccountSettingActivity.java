@@ -40,8 +40,6 @@ public class AccountSettingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_setting);
         db = new Database(this, "UserDatabase.db");
-
-
         userOld = findViewById(R.id.userold);
         emailOld = findViewById(R.id.emailold);
         emailNew = findViewById(R.id.email2);
@@ -51,7 +49,7 @@ public class AccountSettingActivity extends AppCompatActivity {
         btnLogout = findViewById(R.id.logout_settings);
 
         // Assume the username is passed from the previous activity
-        String username = getIntent().getStringExtra("username");
+        String username = getIntent().getStringExtra("Username");
         userOld.setText(username);
         emailOld.setText(db.getEmailByUsername(username));
 

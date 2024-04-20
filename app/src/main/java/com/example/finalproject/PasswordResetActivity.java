@@ -39,7 +39,7 @@ public class PasswordResetActivity extends AppCompatActivity {
         newPassword = findViewById(R.id.new_pass2);
         conPassword = findViewById(R.id.conf_pass2);
         confirm = findViewById(R.id.submit_password_reset);
-        String username = getIntent().getStringExtra("username");
+        String username = getIntent().getStringExtra("Username");
 
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override

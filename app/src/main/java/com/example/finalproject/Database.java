@@ -15,7 +15,7 @@ import java.util.Set;
 
 public class Database extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "UserDatabase.db";
-    private static final int DATABASE_VERSION = 7;
+    private static final int DATABASE_VERSION = 1;
 
     private static final String TABLE_NAME = "Userinfo";
     private static final String USERINFO_ID_COL = "id";
@@ -52,23 +52,24 @@ public class Database extends SQLiteOpenHelper {
         String createTableSQL = "CREATE TABLE " + TABLE_NAME + " (" +
                 USERINFO_ID_COL + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 NAME_COL + " TEXT, " +
-                USERNAME_COL + " TEXT, " +
+                USERNAME_COL + " TEXT UNIQUE, " + // Make the username column unique
                 EMAIL_COL + " TEXT, " +
                 PASSWORD_COL + " TEXT)";
 
         String createTable2SQL = "CREATE TABLE " + TABLE2_NAME + " (" +
                 PRIVATEPOST_ID_COL + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                USERINFO_ID_COL + " INTEGER, " +
+                USER_PRIVATEPOST_COL + " TEXT, " +
                 PRIVATE_POST_COL + " TEXT, " +
                 DATE_PRIVATEPOST_COL + " TEXT, " +
-                "FOREIGN KEY (" + USERINFO_ID_COL + ") REFERENCES " + TABLE_NAME + "(" + USERINFO_ID_COL + "))";
+                "FOREIGN KEY (" + USER_PRIVATEPOST_COL + ") REFERENCES " + TABLE_NAME + "(" + USERNAME_COL + "))";
 
         String createTable3SQL = "CREATE TABLE " + TABLE3_NAME + " (" +
                 PUBLICPOST_ID_COL + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                USERINFO_ID_COL + " INTEGER, " +
+                USER_PUBLICPOST_COL + " TEXT, " +
                 PUBLIC_POST_COL + " TEXT, " +
                 DATE_PUBLICPOST_COL + " TEXT, " +
-                "FOREIGN KEY (" + USERINFO_ID_COL + ") REFERENCES " + TABLE_NAME + "(" + USERINFO_ID_COL + "))";
+                "FOREIGN KEY (" + USER_PUBLICPOST_COL + ") REFERENCES " + TABLE_NAME + "(" + USERNAME_COL + "))";
+
 
         String createTable4SQL = "CREATE TABLE " + TABLE4_NAME + " (" +
                 USER_FRIENDZONE_COL + " INTEGER, " +
@@ -92,10 +93,11 @@ public class Database extends SQLiteOpenHelper {
 }
 
     // Method to add a new user
-    public void addUser(String name,  String username, String password) {
+    public void addUser(String name, String address, String username, String password) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(NAME_COL, name);
+        values.put(EMAIL_COL, address);
         values.put(USERNAME_COL, username);
         values.put(PASSWORD_COL, hashPassword(password));
         db.insert(TABLE_NAME, null, values);
@@ -132,7 +134,6 @@ public class Database extends SQLiteOpenHelper {
         db.close();
         return exists;
     }
-
     public boolean updatePassword(String username, String newPassword) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -142,13 +143,10 @@ public class Database extends SQLiteOpenHelper {
         db.close();
         return rows > 0;
     }
-
-
-    // Method to add a private post
-    public void addPrivatePost(String username, String post, String date) {
+    public void addPrivatePost(String Username, String post, String date) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(USER_PRIVATEPOST_COL, username);
+        values.put(USER_PRIVATEPOST_COL, Username);
         values.put(PRIVATE_POST_COL, post);
         values.put(DATE_PRIVATEPOST_COL, date);
         db.insert(TABLE2_NAME, null, values);
@@ -156,10 +154,10 @@ public class Database extends SQLiteOpenHelper {
     }
 
     // Method to add a public post
-    public void addPublicPost(String username, String post, String date) {
+    public void addPublicPost(String Username, String post, String date) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(USER_PUBLICPOST_COL, username);
+        values.put(USER_PUBLICPOST_COL, Username);
         values.put(PUBLIC_POST_COL, post);
         values.put(DATE_PUBLICPOST_COL, date);
         db.insert(TABLE3_NAME, null, values);
@@ -267,62 +265,6 @@ public class Database extends SQLiteOpenHelper {
         return userSet;
     }
 
-
-    //unused methods, were used in old versions
-//    public ArrayList<Integer> getMoodValues(int id) {
-//        ArrayList<Integer> result = new ArrayList<Integer>();
-//        SQLiteDatabase db = this.getReadableDatabase();
-//        Cursor cursor = db.query(TABLE3_NAME, null,
-//                ID_COL + "=?", new String[]{Integer.toString(id)}, null, null, null);
-//        if(cursor != null && cursor.moveToFirst()) {
-//            int moodIndex = cursor.getColumnIndex(MOOD_COL);
-//            int anxietyIndex = cursor.getColumnIndex(ANXIETY_COL);
-//            int onMedIndex = cursor.getColumnIndex(ON_MEDICINE_COL);
-//            int takenMedIndex = cursor.getColumnIndex(TAKE_MEDICINE_COL);
-//            if (moodIndex != -1 && anxietyIndex != -1 && onMedIndex != -1 && takenMedIndex != -1) {
-//                result.add(cursor.getInt(moodIndex));
-//                result.add(cursor.getInt(anxietyIndex));
-//                result.add(cursor.getInt(onMedIndex));
-//                result.add(cursor.getInt(takenMedIndex));
-//            }
-//            cursor.close();
-//        }
-//        return result;
-//    }
-//
-//    public void setMoodRating(int id, int value) {
-//        SQLiteDatabase db = this.getWritableDatabase();
-//        String query = "UPDATE " + TABLE3_NAME + " SET " + MOOD_COL + "=" + value + " WHERE " +
-//                ID_COL + "=" + id;
-//        db.execSQL(query);
-//        db.close();
-//    }
-//
-//    public void setMoodAnxiety(int id, int value) {
-//        SQLiteDatabase db = this.getWritableDatabase();
-//        String query = "UPDATE " + TABLE3_NAME + " SET " + ANXIETY_COL + "=" + value + " WHERE " +
-//                ID_COL + "=" + id;
-//        db.execSQL(query);
-//        db.close();
-//    }
-//
-//    public void setMoodOnMed(int id, int value) {
-//        SQLiteDatabase db = this.getWritableDatabase();
-//        String query = "UPDATE " + TABLE3_NAME + " SET " + ON_MEDICINE_COL + "=" + value + " WHERE " +
-//                ID_COL + "=" + id;
-//        db.execSQL(query);
-//        db.close();
-//    }
-//
-//    public void setMoodTakeMed(int id, int value) {
-//        SQLiteDatabase db = this.getWritableDatabase();
-//        String query = "UPDATE " + TABLE3_NAME + " SET " + TAKE_MEDICINE_COL + "=" + value + " WHERE " +
-//                ID_COL + "=" + id;
-//        db.execSQL(query);
-//        db.close();
-//    }
-
-
     public String getName(String username) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(TABLE_NAME, new String[]{USERNAME_COL, NAME_COL}, USERNAME_COL + "=?", new String[]{username}, null, null, null);
@@ -337,36 +279,6 @@ public class Database extends SQLiteOpenHelper {
         return result;
 
     }
-//
-//    public ArrayList<Tuple> getNotes(String username) {
-//
-//        ArrayList<Tuple> result = new ArrayList<Tuple>();
-//        SQLiteDatabase db = this.getReadableDatabase();
-//        Cursor cursor = db.query(TABLE2_NAME, null, USERNAME_COL + "=?", new String[]{username}, null, null, null);
-//
-//        if(cursor != null && cursor.moveToFirst()) {
-//            int idIndex = cursor.getColumnIndex(ID_COL);
-//            int noteIndex = cursor.getColumnIndex(NOTES_COL);
-//            if (noteIndex != -1 && idIndex != -1) {
-//                do {
-//                    result.add(new Tuple(
-//                            cursor.getInt(idIndex), cursor.getString(noteIndex)
-//                    ));
-//                }
-//                while(cursor.moveToNext());
-//            }
-//        }
-//
-//        cursor.close();
-//        return result;
-//    }
-
-//    public void deleteNotes(int id) {
-//        SQLiteDatabase db = this.getWritableDatabase();
-//        db.delete(TABLE2_NAME, ID_COL + " = " + Integer.toString(id), null);
-//        db.close();
-//        return;
-//    }
 
     private String hashPassword(String password) {
         try {
