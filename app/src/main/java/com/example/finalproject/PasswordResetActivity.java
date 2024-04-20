@@ -2,6 +2,7 @@ package com.example.finalproject;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -17,6 +18,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import android.os.Environment;
+import android.widget.Toast;
+
 import java.io.IOException;
 
 
@@ -56,6 +59,11 @@ public class PasswordResetActivity extends AppCompatActivity {
                     if (db.updatePassword(username, newPass)) {
                         try {
                             savePasswordChangeLog(username, newPass);
+                            Toast.makeText(PasswordResetActivity.this, "Successfully changed password", Toast.LENGTH_LONG).show();
+
+                            Intent intent = new Intent(PasswordResetActivity.this, AccountSettingActivity.class);
+                            intent.putExtra("Username", username);
+                            startActivity(intent);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

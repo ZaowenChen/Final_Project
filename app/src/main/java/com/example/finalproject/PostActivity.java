@@ -32,19 +32,9 @@ public class PostActivity extends AppCompatActivity {
         usernameView = findViewById(R.id.username); // TextView for displaying the username
         usernameView.setText(username);
 
-
-        setupCheckboxListeners();
-
         postButton.setOnClickListener(view -> postComment());
     }
-    private void setupCheckboxListeners() {
-        globalCheckbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) friendsCheckbox.setChecked(false);
-        });
-        friendsCheckbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) globalCheckbox.setChecked(false);
-        });
-    }
+
     private void postComment() {
         String postContent = noteInput.getText().toString();
         String currentDate = getCurrentDate();
