@@ -145,10 +145,10 @@ public class Database extends SQLiteOpenHelper {
 
 
     // Method to add a private post
-    public void addPrivatePost(int userId, String post, String date) {
+    public void addPrivatePost(String username, String post, String date) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(USER_PRIVATEPOST_COL, userId);
+        values.put(USER_PRIVATEPOST_COL, username);
         values.put(PRIVATE_POST_COL, post);
         values.put(DATE_PRIVATEPOST_COL, date);
         db.insert(TABLE2_NAME, null, values);
@@ -156,10 +156,10 @@ public class Database extends SQLiteOpenHelper {
     }
 
     // Method to add a public post
-    public void addPublicPost(int userId, String post, String date) {
+    public void addPublicPost(String username, String post, String date) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(USER_PUBLICPOST_COL, userId);
+        values.put(USER_PUBLICPOST_COL, username);
         values.put(PUBLIC_POST_COL, post);
         values.put(DATE_PUBLICPOST_COL, date);
         db.insert(TABLE3_NAME, null, values);
