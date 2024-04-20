@@ -91,24 +91,30 @@ public class AccountSettingActivity extends AppCompatActivity {
     }
 
     private void saveLogoutTime() throws JSONException, IOException {
-        String filename = "logout_time.json";
-        String myDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + "/Documents/" + filename;
-        File file = new File(myDir);
-        if (!file.exists()) {
-            file.createNewFile();
+            String filename = "logout_time.json";
+            // Use the proper method to get the Downloads directory
+            File downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+            if (!downloadsDir.exists()) {
+                if (!downloadsDir.mkdirs()) {
+                    Log.e("LogoutActivity", "Failed to create directory");
+                    return;
+                }
+            }
+            File file = new File(downloadsDir, filename);
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+            String logoutTime = sdf.format(new Date());
+
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("logout_time", logoutTime);
+
+            FileOutputStream fOut = new FileOutputStream(file, true);
+            OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
+            myOutWriter.append(jsonObject.toString() + "\n");
+            myOutWriter.close();
+            fOut.close();
         }
-
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-        String logoutTime = sdf.format(new Date());
-
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("logout_time", logoutTime);
-
-        FileOutputStream fOut = new FileOutputStream(file, true);
-        OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
-        myOutWriter.append(jsonObject.toString() + "\n");
-        myOutWriter.close();
-        fOut.close();
-    }
 
 }

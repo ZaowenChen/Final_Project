@@ -14,8 +14,6 @@ import android.content.pm.PackageManager;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-
-
 import androidx.appcompat.app.AppCompatActivity;
 
 import org.json.JSONException;
@@ -87,7 +85,9 @@ public class LoginActivity extends AppCompatActivity {
     private void requestAppPermissions() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE
+
             }, 0);
         }
     }
@@ -95,8 +95,15 @@ public class LoginActivity extends AppCompatActivity {
 
     private void saveLoginTime() throws JSONException, IOException {
         String filename = "login_time.json";
-        String myDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + "/Documents/" + filename;
-        File file = new File(myDir);
+        // Use the proper method to get the Downloads directory
+        File downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        if (!downloadsDir.exists()) {
+            if (!downloadsDir.mkdirs()) {
+                Log.e("LoginActivity", "Failed to create directory");
+                return;
+            }
+        }
+        File file = new File(downloadsDir, filename);
         if (!file.exists()) {
             file.createNewFile();
         }
