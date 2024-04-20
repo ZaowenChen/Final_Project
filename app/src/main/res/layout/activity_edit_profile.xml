@@ -302,7 +302,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_weight="0.5"
                     android:backgroundTint="@color/blue"
-                    android:text="Return to Profile"
+                    android:text="Save Changes"
                     android:textColor="@color/black" />
 
             </RelativeLayout>
