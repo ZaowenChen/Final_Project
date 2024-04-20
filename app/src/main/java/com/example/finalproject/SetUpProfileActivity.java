@@ -69,18 +69,6 @@ public class SetUpProfileActivity extends AppCompatActivity {
             }
         });
 
-        // Set the date for Calendar View
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.YEAR, 2000);
-        calendar.set(Calendar.MONTH, Calendar.JANUARY);
-        calendar.set(Calendar.DAY_OF_MONTH, 1);
-        long desiredDateInMillis = calendar.getTimeInMillis();
-        birthdayInput.setDate(desiredDateInMillis);
-
-        // Set the time for Time Picker
-        onlineTime.setHour(9);
-        onlineTime.setMinute(0);
-
         setup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

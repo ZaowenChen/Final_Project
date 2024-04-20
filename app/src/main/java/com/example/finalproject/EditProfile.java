@@ -78,8 +78,22 @@ public class EditProfile extends AppCompatActivity {
         Spinner profilePicSelection = findViewById(R.id.profilePicSpinner);
         String[] profile_description = {"Yoshi", "Lion", "Space", "Spaceman"};
 
+        // Get index to show old profile
+        // Iterate through the array to find the index of the target item
+        int index = 0;
+        for (int i = 0; i < profile_description.length; i++) {
+            if (profile_description[i].equals(curr_profile)) {
+                index = i; // Set the index if the item is found
+                break;     // Exit the loop once the item is found
+            }
+        }
+
+
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, profile_description);
         profilePicSelection.setAdapter(adapter); // create a new adapter to feed the songs list into the spinner
+
+
+        profilePicSelection.setSelection(index);
         profilePicSelection.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
