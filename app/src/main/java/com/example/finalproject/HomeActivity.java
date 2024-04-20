@@ -3,6 +3,7 @@ package com.example.finalproject;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -26,8 +27,8 @@ public class HomeActivity extends AppCompatActivity {
 
         //db = new Database(this, "database");
         // Received intent and get sharedpreferences
-        //Intent received_intent = getIntent();
-        //String username = received_intent.getStringExtra("Username");
+        Intent received_intent = getIntent();
+        String username = received_intent.getStringExtra("Username");
 
         //String name = db.getName(username);
 
@@ -56,6 +57,16 @@ public class HomeActivity extends AppCompatActivity {
                 friends_post.setBackgroundColor(Color.parseColor("#BDE0FE"));
                 global.setBackgroundColor(Color.parseColor("#FFFFFF"));
                 navigateToFragment(PrivateFragment.newInstance());
+            }
+        });
+
+        Button profile = findViewById(R.id.profile);
+        profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HomeActivity.this, UserProfileActivity.class);
+                intent.putExtra("Username", username);
+                startActivity(intent);
             }
         });
 
