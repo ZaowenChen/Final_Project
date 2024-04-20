@@ -19,50 +19,47 @@ import org.w3c.dom.Text;
 public class HomeActivity extends AppCompatActivity {
 
     private Database db;
-
-
+    private TextView global;
+    private TextView friends_Post;
+    private Button post, profile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
-        //db = new Database(this, "database");
-        // Received intent and get sharedpreferences
         Intent received_intent = getIntent();
         String username = received_intent.getStringExtra("Username");
+        global = findViewById(R.id.globalposts);
+        friends_Post = findViewById(R.id.friendposts);
+        post = findViewById(R.id.post);
+        profile = findViewById(R.id.profile);
 
-        //String name = db.getName(username);
-
-        TextView global = findViewById(R.id.globalposts);
-        TextView friends_post = findViewById(R.id.friendposts);
 
         global.setBackgroundColor(Color.parseColor("#BDE0FE"));
-        friends_post.setBackgroundColor(Color.parseColor("#FFFFFF"));
+        friends_Post.setBackgroundColor(Color.parseColor("#FFFFFF"));
 
         Log.d("HomeActivity", "onCreate: adding fragment for global post");
-        navigateToFragment(PublicFragment.newInstance());
 
+        setFragmentListeners();
+        navigateToFragment(PublicFragment.newInstance());  // Load public posts by default
 
         global.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 global.setBackgroundColor(Color.parseColor("#BDE0FE"));
-                friends_post.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                friends_Post.setBackgroundColor(Color.parseColor("#FFFFFF"));
                 navigateToFragment(PublicFragment.newInstance());
             }
         });
 
-        friends_post.setOnClickListener(new View.OnClickListener() {
+        friends_Post.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                friends_post.setBackgroundColor(Color.parseColor("#BDE0FE"));
+                friends_Post.setBackgroundColor(Color.parseColor("#BDE0FE"));
                 global.setBackgroundColor(Color.parseColor("#FFFFFF"));
                 navigateToFragment(PrivateFragment.newInstance());
             }
         });
-
-        Button post = findViewById(R.id.post);
         post.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,8 +69,6 @@ public class HomeActivity extends AppCompatActivity {
 
             }
         });
-
-
         Button settings = findViewById(R.id.settings);
         settings.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,9 +78,6 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(Settingintent);
             }
         });
-
-
-        Button profile = findViewById(R.id.profile);
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -94,9 +86,27 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-
     }
+
+
+
+    private void setFragmentListeners() {
+        global.setOnClickListener(v -> switchFragment(true));
+        friends_Post.setOnClickListener(v -> switchFragment(false));
+    }
+
+    private void switchFragment(boolean isPublic) {
+        if (isPublic) {
+            global.setBackgroundColor(Color.parseColor("#BDE0FE"));
+            friends_Post.setBackgroundColor(Color.parseColor("#FFFFFF"));
+            navigateToFragment(PublicFragment.newInstance());
+        } else {
+            friends_Post.setBackgroundColor(Color.parseColor("#BDE0FE"));
+            global.setBackgroundColor(Color.parseColor("#FFFFFF"));
+            navigateToFragment(PrivateFragment.newInstance());
+        }
+    }
+
 
     @Override
     public void onBackPressed() {

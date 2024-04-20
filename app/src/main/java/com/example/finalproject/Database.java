@@ -164,6 +164,23 @@ public class Database extends SQLiteOpenHelper {
         db.close();
     }
 
+
+    public Cursor getLastPrivatePost() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursorprivate = db.rawQuery("SELECT * FROM PrivatePost ORDER BY _id DESC LIMIT 1", null);
+        return cursorprivate;
+    }
+
+    public Cursor getLastPublicPost() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursorpublic = db.rawQuery("SELECT * FROM PublicPost ORDER BY _id DESC LIMIT 1", null);
+        return cursorpublic;
+    }
+
+
+
+
+
     // Method to add a friend to the Friendzone table
     public void addFriend(String userId, String friendId) {
         SQLiteDatabase db = this.getWritableDatabase();

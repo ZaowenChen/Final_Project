@@ -1,5 +1,6 @@
 package com.example.finalproject;
 
+import android.database.Cursor;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -7,46 +8,18 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link PrivateFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class PrivateFragment extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private Database db;
+    private TextView usernameView, contentView;
+    private Button prevButton, nextButton;
 
     public PrivateFragment() {
         // Required empty public constructor
     }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment PrivateFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-//    public static PrivateFragment newInstance(String param1, String param2) {
-//        PrivateFragment fragment = new PrivateFragment();
-//        Bundle args = new Bundle();
-//        args.putString(ARG_PARAM1, param1);
-//        args.putString(ARG_PARAM2, param2);
-//        fragment.setArguments(args);
-//        return fragment;
-//    }
-
     public static PrivateFragment newInstance() {
         return new PrivateFragment();
     }
@@ -61,15 +34,51 @@ public class PrivateFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        db = new Database(getContext(), "UserDatabase.db");
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_private, container, false);
-
         //Set content
         TextView content = view.findViewById(R.id.private_postcontent);
         content.setText("Private Content");
-
+        usernameView = view.findViewById(R.id.private_username);
+        contentView = view.findViewById(R.id.private_postcontent);
+        prevButton = view.findViewById(R.id.private_prev);
+        nextButton = view.findViewById(R.id.private_next);
+        // Load the last post initially
+        if (!loadPost()) {
+            Toast.makeText(getContext(), "No posts available", Toast.LENGTH_SHORT).show();
+        }
+        prevButton.setOnClickListener(v -> {
+            Toast.makeText(getContext(), "No previous posts", Toast.LENGTH_SHORT).show();
+        });
+        nextButton.setOnClickListener(v -> {
+            Toast.makeText(getContext(), "Last post", Toast.LENGTH_SHORT).show();
+        });
         return view;
     }
+
+    // Method to load the last post from the database
+    private boolean loadPost() {
+        Cursor cursor = db.getLastPrivatePost();
+        if (cursor != null && cursor.moveToFirst()) {
+            int usernameIndex = cursor.getColumnIndex("user_privatepost_col");  // Adjust column name as per your schema
+            int contentIndex = cursor.getColumnIndex("private_post_col");        // Adjust column name as per your schema
+            if (usernameIndex == -1 || contentIndex == -1) {
+                Toast.makeText(getContext(), "Database column not found", Toast.LENGTH_SHORT).show();
+                cursor.close();
+                return false;
+            }
+            String username = cursor.getString(usernameIndex);
+            String content = cursor.getString(contentIndex);
+            usernameView.setText(username);
+            contentView.setText(content);
+            cursor.close();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
 }
