@@ -24,6 +24,7 @@ public class PrivateFragment extends Fragment {
     private TextView usernameView, contentView;
     private Button prevButton, nextButton;
     private static int postCounter = 0;
+    private String username;
 
     public PrivateFragment() {
         // Required empty public constructor
@@ -44,25 +45,26 @@ public class PrivateFragment extends Fragment {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_private, container, false);
         //Set content
+        username = getArguments().getString("Username");
         usernameView = view.findViewById(R.id.private_username);
         contentView = view.findViewById(R.id.private_postcontent);
         prevButton = view.findViewById(R.id.private_prev);
         nextButton = view.findViewById(R.id.private_next);
-        ArrayList<String> posts = db.loadPrivatePost(postCounter);
+        ArrayList<String> posts = db.loadPrivatePost(postCounter, username);
         // Load the last post initially
         loadPost(posts);
-        prevButton.setOnClickListener(new View.OnClickListener() {
+        nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 postCounter += 1;
-                ArrayList<String> posts = db.loadPrivatePost(postCounter);
+                ArrayList<String> posts = db.loadPrivatePost(postCounter, username);
                 if(posts.isEmpty()) {
                     postCounter -= 1;
                 }
                 loadPost(posts);
             }
         });
-        nextButton.setOnClickListener(new View.OnClickListener() {
+        prevButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 postCounter -= 1;
@@ -70,7 +72,7 @@ public class PrivateFragment extends Fragment {
                 // to ensure counter does not go to negative
                 postCounter = Math.max(0, postCounter);
 
-                ArrayList<String> posts = db.loadPrivatePost(postCounter);
+                ArrayList<String> posts = db.loadPrivatePost(postCounter, username);
                 if(posts.isEmpty()) {
                     postCounter += 1;
                 }

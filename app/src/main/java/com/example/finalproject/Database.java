@@ -209,15 +209,16 @@ public class Database extends SQLiteOpenHelper {
         db.close();
     }
 
-    public ArrayList<String> loadPrivatePost(int counter) {
+    public ArrayList<String> loadPrivatePost(int counter, String user) {
 
         SQLiteDatabase db = this.getReadableDatabase();
-        String sql = "SELECT * FROM " + TABLE2_NAME + " ORDER BY " + PRIVATEPOST_ID_COL + "DESC";
-        Cursor cursor = db.rawQuery(sql, null);
+        Cursor cursor = this.getFriendPostsCursor(user);
 
         ArrayList<String> output = new ArrayList<String>();
         if (cursor != null && cursor.moveToFirst()) {
 
+
+            Log.d("loadPublic", "loadPublicPost: cursor not null");
             for (int i = 0; i < counter; i++) {
                 if(!cursor.moveToNext()) {
                     return output;
@@ -247,7 +248,7 @@ public class Database extends SQLiteOpenHelper {
     public ArrayList<String> loadPublicPost(int counter) {
 
         SQLiteDatabase db = this.getReadableDatabase();
-        String sql = "SELECT * FROM " + TABLE3_NAME + " ORDER BY " + PRIVATEPOST_ID_COL + "DESC";
+        String sql = "SELECT * FROM " + TABLE3_NAME + " ORDER BY " + PUBLICPOST_ID_COL + " DESC ";
         Cursor cursor = db.rawQuery(sql, null);
 
         ArrayList<String> output = new ArrayList<String>();
@@ -308,6 +309,23 @@ public class Database extends SQLiteOpenHelper {
         }
         db.close();
         return result;
+    }
+
+    private Cursor getFriendPostsCursor(String username) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        ArrayList<String> friendsList = this.getFriends(username);
+        if(friendsList.isEmpty()) {
+            return null;
+        }
+        String cond = " ( " + friendsList.get(0);
+        for (int i = 1; i < friendsList.size(); i++) {
+            cond = cond + " OR " + friendsList.get(i);
+        }
+        cond += ") ";
+
+        String sql = "SELECT * FROM " + TABLE2_NAME + " WHERE " + USER_COL + "=" + cond +  " ORDER BY " + PRIVATEPOST_ID_COL + " DESC ";
+
+        return db.rawQuery(sql, null);
     }
 
 

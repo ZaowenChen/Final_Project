@@ -1,9 +1,7 @@
 package com.example.finalproject;
 
 import static com.example.finalproject.Database.PRIVATE_POST_COL;
-import static com.example.finalproject.Database.PUBLIC_POST_COL;
 import static com.example.finalproject.Database.USER_PRIVATEPOST_COL;
-import static com.example.finalproject.Database.USER_PUBLICPOST_COL;
 
 import android.database.Cursor;
 import android.os.Bundle;
@@ -60,7 +58,7 @@ public class PublicFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 postCounter += 1;
-                ArrayList<String> posts = db.loadPrivatePost(postCounter);
+                ArrayList<String> posts = db.loadPublicPost(postCounter);
                 if(posts.isEmpty()) {
                     postCounter -= 1;
                 }
@@ -75,7 +73,7 @@ public class PublicFragment extends Fragment {
                 // to ensure counter does not go to negative
                 postCounter = Math.max(0, postCounter);
 
-                ArrayList<String> posts = db.loadPrivatePost(postCounter);
+                ArrayList<String> posts = db.loadPublicPost(postCounter);
                 if(posts.isEmpty()) {
                     postCounter += 1;
                 }

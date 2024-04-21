@@ -22,13 +22,14 @@ public class HomeActivity extends AppCompatActivity {
     private TextView global;
     private TextView friends_Post;
     private Button post, profile, friends, settings;
+    private String username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         Intent received_intent = getIntent();
-        String username = received_intent.getStringExtra("Username");
+        username = received_intent.getStringExtra("Username");
         global = findViewById(R.id.globalposts);
         friends_Post = findViewById(R.id.friendposts);
         post = findViewById(R.id.post);
@@ -59,6 +60,7 @@ public class HomeActivity extends AppCompatActivity {
             public void onClick(View v) {
                 friends_Post.setBackgroundColor(Color.parseColor("#BDE0FE"));
                 global.setBackgroundColor(Color.parseColor("#FFFFFF"));
+
                 navigateToFragment(PrivateFragment.newInstance());
             }
         });
@@ -130,6 +132,9 @@ public class HomeActivity extends AppCompatActivity {
         startActivity(a);
     }
     private void navigateToFragment(Fragment fragment) {
+        Bundle bundle = new Bundle();
+        bundle.putString("Username", username);
+        fragment.setArguments(bundle);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.postfrag, fragment); // Make sure this container ID matches your layout
         transaction.addToBackStack(null);
