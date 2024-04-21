@@ -186,8 +186,8 @@ public class Database extends SQLiteOpenHelper {
     // Method to remove a friend from the Friendzone table
     public void removeFriend(String username, String friend) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE5_NAME, USER_COL + " = ? AND " + FRIEND_COL + " = ?", new String[]{username, friend});
-        db.delete(TABLE5_NAME, FRIEND_COL + " = ? AND " + USER_COL + " = ?", new String[]{username, friend});
+        db.delete(TABLE4_NAME, USER_COL + " = ? AND " + FRIEND_COL + " = ?", new String[]{username, friend});
+        db.delete(TABLE4_NAME, FRIEND_COL + " = ? AND " + USER_COL + " = ?", new String[]{username, friend});
         db.close();
     }
 
@@ -205,7 +205,7 @@ public class Database extends SQLiteOpenHelper {
     // Method to delete a friend request
     public void deleteFriendRequest(String username, String friend) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE4_NAME, USER_COL + " = ? AND " + FRIEND_COL + " = ?", new String[]{username, friend});
+        db.delete(TABLE5_NAME, USER_COL + " = ? AND " + FRIEND_COL + " = ?", new String[]{username, friend});
         db.close();
     }
 
