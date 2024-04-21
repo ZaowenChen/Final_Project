@@ -43,21 +43,7 @@ public class FriendsActivity extends AppCompatActivity {
         //build, inflate, and store checkboxes for friendsList and requestsList
         if(!friendsList.isEmpty()) {
             for (String friend : friendsList) {
-                TextView tx = new TextView(this);
-                tx.setText(friend);
-                tx.setTextSize(16);
-                tx.setPadding(20,5,0,5);
-
-                tx.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(FriendsActivity.this, FriendProfileActivity.class);
-                        intent.putExtra("Friend", friend);
-                        intent.putExtra("Username", username);
-                        startActivity(intent);
-                    }
-                });
-
+                TextView tx = friendMaker(friend);
                 friendsLayout.addView(tx);
             }
         }
@@ -84,13 +70,15 @@ public class FriendsActivity extends AppCompatActivity {
                 for (int i = requestChList.size()-1; i >= 0; i--) {
                     if(requestChList.get(i).isChecked()) {
                         String friendname = requestsList.get(i);
+                        Log.d("accept", "onClick: addfriend");
                         db.addFriend(username, friendname);
+                        Log.d("accept", "onClick: deleteFriendReq");
                         db.deleteFriendRequest(friendname, username);
+                        Log.d("accept", "onClick: -checkbox +textview");
                         friendsList.add(friendname);
                         requestsList.remove(i);
-                        CheckBox ch = requestChList.get(i);
-                        friendsLayout.addView(ch);
-                        requestsLayout.removeView(ch);
+                        friendsLayout.addView(friendMaker(friendname));
+                        requestsLayout.removeView(requestChList.get(i));
                         requestChList.remove(i);
                     }
                 }
@@ -156,6 +144,24 @@ public class FriendsActivity extends AppCompatActivity {
         //this method creates a repeating, exactly timed alarm
         alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), pendingIntent);
         Log.d("===Sensing alarm===", "Friend Request Notification.");
+    }
+
+    private TextView friendMaker(String friend) {
+        TextView tx = new TextView(this);
+        tx.setText(friend);
+        tx.setTextSize(16);
+        tx.setPadding(20,5,0,5);
+
+        tx.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(FriendsActivity.this, FriendProfileActivity.class);
+                intent.putExtra("Friend", friend);
+                intent.putExtra("Username", username);
+                startActivity(intent);
+            }
+        });
+        return tx;
     }
 
     public void onBackPressed() {
