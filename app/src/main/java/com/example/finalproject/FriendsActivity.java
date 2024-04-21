@@ -119,13 +119,16 @@ public class FriendsActivity extends AppCompatActivity {
                 String friendName = friendSearch.getText().toString();
                 if(!userSet.contains(friendName)) {
                     Toast.makeText(FriendsActivity.this, "Username not found.", Toast.LENGTH_SHORT).show();
+                    Log.d("addFriend", "onClick: user not found");
                 } else {
                     db.addFriendRequest(username, friendName);
 
                     //Send notification
+                    Log.d("addFriend", "onClick: user found, senting notif");
                     String message = username + " has sent " + friendName + " a friend request.";
                     start_Sensing_new(message);
 
+                    Log.d("addFriend", "onClick: notif done");
                     Toast.makeText(FriendsActivity.this, "Friend request sent!", Toast.LENGTH_SHORT).show();
 
                 }
