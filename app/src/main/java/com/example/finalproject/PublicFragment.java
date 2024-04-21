@@ -1,10 +1,16 @@
 package com.example.finalproject;
 
+import static com.example.finalproject.Database.PRIVATE_POST_COL;
+import static com.example.finalproject.Database.PUBLIC_POST_COL;
+import static com.example.finalproject.Database.USER_PRIVATEPOST_COL;
+import static com.example.finalproject.Database.USER_PUBLICPOST_COL;
+
 import android.database.Cursor;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,8 +45,6 @@ public class PublicFragment extends Fragment {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_public, container, false);
         //Set content
-        TextView content = view.findViewById(R.id.public_postcontent);
-        content.setText("Public Content");
         usernameView = view.findViewById(R.id.public_username);
         contentView = view.findViewById(R.id.public_postcontent);
         prevButton = view.findViewById(R.id.public_prev);
@@ -62,13 +66,16 @@ public class PublicFragment extends Fragment {
     private boolean loadPost() {
         Cursor cursor = db.getLastPublicPost();
         if (cursor != null && cursor.moveToFirst()) {
-            int usernameIndex = cursor.getColumnIndex("user_publicpost_col");  // Adjust column name as per your schema
-            int contentIndex = cursor.getColumnIndex("public_post_col");        // Adjust column name as per your schema
+            int usernameIndex = cursor.getColumnIndex(USER_PUBLICPOST_COL);
+            int contentIndex = cursor.getColumnIndex(PUBLIC_POST_COL);
             if (usernameIndex == -1 || contentIndex == -1) {
                 Toast.makeText(getContext(), "Database column not found", Toast.LENGTH_SHORT).show();
                 cursor.close();
                 return false;
             }
+            Log.d("LoadPost", "Username Index: " + usernameIndex + ", Content Index: " + contentIndex);
+            if (cursor.getString(usernameIndex) != null) Log.d("LoadPost", "Username: " + cursor.getString(usernameIndex));
+            if (cursor.getString(contentIndex) != null) Log.d("LoadPost", "Content: " + cursor.getString(contentIndex));
             String username = cursor.getString(usernameIndex);
             String content = cursor.getString(contentIndex);
             usernameView.setText(username);

@@ -26,14 +26,14 @@ public class Database extends SQLiteOpenHelper {
 
     private static final String TABLE2_NAME = "PrivatePost";
     private static final String PRIVATEPOST_ID_COL = "Post_ID";
-    private static final String USER_PRIVATEPOST_COL = "Username";
-    private static final String PRIVATE_POST_COL = "Post";
+    public static final String USER_PRIVATEPOST_COL = "Username";
+    public static final String PRIVATE_POST_COL = "Post";
     private static final String DATE_PRIVATEPOST_COL = "Date";
 
     private static final String TABLE3_NAME = "PublicPost";
     private static final String PUBLICPOST_ID_COL = "Post_ID";
-    private static final String USER_PUBLICPOST_COL = "Username";
-    private static final String PUBLIC_POST_COL = "Post";
+    public static final String USER_PUBLICPOST_COL = "Username";
+    public  static final String PUBLIC_POST_COL = "Post";
     private static final String DATE_PUBLICPOST_COL = "Date";
 
     private static final String TABLE4_NAME = "Friendzone";
@@ -163,22 +163,19 @@ public class Database extends SQLiteOpenHelper {
         db.insert(TABLE3_NAME, null, values);
         db.close();
     }
-
-
     public Cursor getLastPrivatePost() {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursorprivate = db.rawQuery("SELECT * FROM PrivatePost ORDER BY _id DESC LIMIT 1", null);
+        String sql = "SELECT * FROM " + TABLE2_NAME + " ORDER BY " + PRIVATEPOST_ID_COL + " DESC LIMIT 1";
+        Cursor cursorprivate = db.rawQuery(sql, null);
         return cursorprivate;
     }
 
     public Cursor getLastPublicPost() {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursorpublic = db.rawQuery("SELECT * FROM PublicPost ORDER BY _id DESC LIMIT 1", null);
+        String sql = "SELECT * FROM " + TABLE3_NAME + " ORDER BY " + PUBLICPOST_ID_COL + " DESC LIMIT 1";
+        Cursor cursorpublic = db.rawQuery(sql, null);
         return cursorpublic;
     }
-
-
-
 
 
     // Method to add a friend to the Friendzone table

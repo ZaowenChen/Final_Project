@@ -1,10 +1,14 @@
 package com.example.finalproject;
 
+import static com.example.finalproject.Database.PRIVATE_POST_COL;
+import static com.example.finalproject.Database.USER_PRIVATEPOST_COL;
+
 import android.database.Cursor;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,8 +43,6 @@ public class PrivateFragment extends Fragment {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_private, container, false);
         //Set content
-        TextView content = view.findViewById(R.id.private_postcontent);
-        content.setText("Private Content");
         usernameView = view.findViewById(R.id.private_username);
         contentView = view.findViewById(R.id.private_postcontent);
         prevButton = view.findViewById(R.id.private_prev);
@@ -62,23 +64,31 @@ public class PrivateFragment extends Fragment {
     private boolean loadPost() {
         Cursor cursor = db.getLastPrivatePost();
         if (cursor != null && cursor.moveToFirst()) {
-            int usernameIndex = cursor.getColumnIndex("user_privatepost_col");  // Adjust column name as per your schema
-            int contentIndex = cursor.getColumnIndex("private_post_col");        // Adjust column name as per your schema
+            // Directly using column names, assuming constants from the provided example
+            int usernameIndex = cursor.getColumnIndex(USER_PRIVATEPOST_COL);  // Correct use of constants
+            int contentIndex = cursor.getColumnIndex(PRIVATE_POST_COL);       // Correct use of constants
             if (usernameIndex == -1 || contentIndex == -1) {
                 Toast.makeText(getContext(), "Database column not found", Toast.LENGTH_SHORT).show();
                 cursor.close();
                 return false;
             }
+            Log.d("LoadPost", "Username Index: " + usernameIndex + ", Content Index: " + contentIndex);
             String username = cursor.getString(usernameIndex);
             String content = cursor.getString(contentIndex);
-            usernameView.setText(username);
-            contentView.setText(content);
+            if (username != null && content != null) {
+                Log.d("LoadPost", "Username: " + username + ", Content: " + content);
+                usernameView.setText(username);
+                contentView.setText(content);
+            } else {
+                Toast.makeText(getContext(), "Empty data in database", Toast.LENGTH_SHORT).show();
+            }
             cursor.close();
             return true;
         } else {
             return false;
         }
     }
+
 
 
 }
