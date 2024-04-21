@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -32,8 +33,8 @@ public class Database extends SQLiteOpenHelper {
 
     private static final String TABLE3_NAME = "PublicPost";
     private static final String PUBLICPOST_ID_COL = "Post_ID";
-    public static final String USER_PUBLICPOST_COL = "Username";
-    public  static final String PUBLIC_POST_COL = "Post";
+    private static final String USER_PUBLICPOST_COL = "Username";
+    private  static final String PUBLIC_POST_COL = "Post";
     private static final String DATE_PUBLICPOST_COL = "Date";
 
     private static final String TABLE4_NAME = "Friendzone";
@@ -163,12 +164,6 @@ public class Database extends SQLiteOpenHelper {
         db.insert(TABLE3_NAME, null, values);
         db.close();
     }
-    public Cursor getLastPrivatePost() {
-        SQLiteDatabase db = this.getReadableDatabase();
-        String sql = "SELECT * FROM " + TABLE2_NAME + " ORDER BY " + PRIVATEPOST_ID_COL + " DESC LIMIT 1";
-        Cursor cursorprivate = db.rawQuery(sql, null);
-        return cursorprivate;
-    }
 
     public Cursor getLastPublicPost() {
         SQLiteDatabase db = this.getReadableDatabase();
@@ -212,6 +207,76 @@ public class Database extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE4_NAME, USER_COL + " = ? AND " + FRIEND_COL + " = ?", new String[]{username, friend});
         db.close();
+    }
+
+    public ArrayList<String> loadPrivatePost(int counter) {
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        String sql = "SELECT * FROM " + TABLE2_NAME + " ORDER BY " + PRIVATEPOST_ID_COL + "DESC";
+        Cursor cursor = db.rawQuery(sql, null);
+
+        ArrayList<String> output = new ArrayList<String>();
+        if (cursor != null && cursor.moveToFirst()) {
+
+            for (int i = 0; i < counter; i++) {
+                if(!cursor.moveToNext()) {
+                    return output;
+                }
+            }
+
+            // Directly using column names, assuming constants from the provided example
+            int usernameIndex = cursor.getColumnIndex(USER_PRIVATEPOST_COL);  // Correct use of constants
+            int contentIndex = cursor.getColumnIndex(PRIVATE_POST_COL);       // Correct use of constants
+            if (usernameIndex == -1 || contentIndex == -1) {
+                cursor.close();
+                return output;
+            }
+            Log.d("LoadPost", "Username Index: " + usernameIndex + ", Content Index: " + contentIndex);
+            String username = cursor.getString(usernameIndex);
+            String content = cursor.getString(contentIndex);
+            if (username != null && content != null) {
+                Log.d("LoadPost", "Username: " + username + ", Content: " + content);
+                output.add(username);
+                output.add(content);
+            }
+            cursor.close();
+        }
+        return output;
+    }
+
+    public ArrayList<String> loadPublicPost(int counter) {
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        String sql = "SELECT * FROM " + TABLE3_NAME + " ORDER BY " + PRIVATEPOST_ID_COL + "DESC";
+        Cursor cursor = db.rawQuery(sql, null);
+
+        ArrayList<String> output = new ArrayList<String>();
+        if (cursor != null && cursor.moveToFirst()) {
+
+            for (int i = 0; i < counter; i++) {
+                if(!cursor.moveToNext()) {
+                    return output;
+                }
+            }
+
+            // Directly using column names, assuming constants from the provided example
+            int usernameIndex = cursor.getColumnIndex(USER_PUBLICPOST_COL);  // Correct use of constants
+            int contentIndex = cursor.getColumnIndex(PUBLIC_POST_COL);       // Correct use of constants
+            if (usernameIndex == -1 || contentIndex == -1) {
+                cursor.close();
+                return output;
+            }
+            Log.d("LoadPost", "Username Index: " + usernameIndex + ", Content Index: " + contentIndex);
+            String username = cursor.getString(usernameIndex);
+            String content = cursor.getString(contentIndex);
+            if (username != null && content != null) {
+                Log.d("LoadPost", "Username: " + username + ", Content: " + content);
+                output.add(username);
+                output.add(content);
+            }
+            cursor.close();
+        }
+        return output;
     }
 
 

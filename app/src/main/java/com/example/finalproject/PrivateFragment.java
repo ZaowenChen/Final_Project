@@ -9,6 +9,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
+import android.util.Size;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +17,13 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 public class PrivateFragment extends Fragment {
     private Database db;
     private TextView usernameView, contentView;
     private Button prevButton, nextButton;
+    private static int postCounter = 0;
 
     public PrivateFragment() {
         // Required empty public constructor
@@ -31,10 +35,7 @@ public class PrivateFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        if (getArguments() != null) {
-//            mParam1 = getArguments().getString(ARG_PARAM1);
-//            mParam2 = getArguments().getString(ARG_PARAM2);
-//        }
+
     }
 
     @Override
@@ -47,45 +48,45 @@ public class PrivateFragment extends Fragment {
         contentView = view.findViewById(R.id.private_postcontent);
         prevButton = view.findViewById(R.id.private_prev);
         nextButton = view.findViewById(R.id.private_next);
+        ArrayList<String> posts = db.loadPrivatePost(postCounter);
         // Load the last post initially
-        if (!loadPost()) {
-            Toast.makeText(getContext(), "No posts available", Toast.LENGTH_SHORT).show();
-        }
-        prevButton.setOnClickListener(v -> {
-            Toast.makeText(getContext(), "No previous posts", Toast.LENGTH_SHORT).show();
+        loadPost(posts);
+        prevButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                postCounter += 1;
+                ArrayList<String> posts = db.loadPrivatePost(postCounter);
+                if(posts.isEmpty()) {
+                    postCounter -= 1;
+                }
+                loadPost(posts);
+            }
         });
-        nextButton.setOnClickListener(v -> {
-            Toast.makeText(getContext(), "Last post", Toast.LENGTH_SHORT).show();
+        nextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                postCounter -= 1;
+
+                // to ensure counter does not go to negative
+                postCounter = Math.max(0, postCounter);
+
+                ArrayList<String> posts = db.loadPrivatePost(postCounter);
+                if(posts.isEmpty()) {
+                    postCounter += 1;
+                }
+                loadPost(posts);
+            }
         });
+
         return view;
     }
 
-    // Method to load the last post from the database
-    private boolean loadPost() {
-        Cursor cursor = db.getLastPrivatePost();
-        if (cursor != null && cursor.moveToFirst()) {
-            // Directly using column names, assuming constants from the provided example
-            int usernameIndex = cursor.getColumnIndex(USER_PRIVATEPOST_COL);  // Correct use of constants
-            int contentIndex = cursor.getColumnIndex(PRIVATE_POST_COL);       // Correct use of constants
-            if (usernameIndex == -1 || contentIndex == -1) {
-                Toast.makeText(getContext(), "Database column not found", Toast.LENGTH_SHORT).show();
-                cursor.close();
-                return false;
-            }
-            Log.d("LoadPost", "Username Index: " + usernameIndex + ", Content Index: " + contentIndex);
-            String username = cursor.getString(usernameIndex);
-            String content = cursor.getString(contentIndex);
-            if (username != null && content != null) {
-                Log.d("LoadPost", "Username: " + username + ", Content: " + content);
-                usernameView.setText(username);
-                contentView.setText(content);
-            } else {
-                Toast.makeText(getContext(), "Empty data in database", Toast.LENGTH_SHORT).show();
-            }
-            cursor.close();
-            return true;
+    private void loadPost(ArrayList<String> posts) {
+        if (posts.isEmpty()) {
+            Toast.makeText(getContext(), "No posts available", Toast.LENGTH_SHORT).show();
         } else {
-            return false;
+            usernameView.setText(posts.get(0));
+            contentView.setText(posts.get(1));
         }
     }
 

@@ -18,10 +18,14 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 public class PublicFragment extends Fragment {
     private Database db;
     private TextView usernameView, contentView;
     private Button prevButton, nextButton;
+
+    private static int postCounter = 0;
 
     public PublicFragment() {
         // Required empty public constructor
@@ -49,41 +53,45 @@ public class PublicFragment extends Fragment {
         contentView = view.findViewById(R.id.public_postcontent);
         prevButton = view.findViewById(R.id.public_prev);
         nextButton = view.findViewById(R.id.public_next);
+        ArrayList<String> posts = db.loadPublicPost(postCounter);
         // Load the last post initially
-        if (!loadPost()) {
-            Toast.makeText(getContext(), "No posts available", Toast.LENGTH_SHORT).show();
-        }
-        prevButton.setOnClickListener(v -> {
-            Toast.makeText(getContext(), "No previous posts", Toast.LENGTH_SHORT).show();
+        loadPost(posts);
+        prevButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                postCounter += 1;
+                ArrayList<String> posts = db.loadPrivatePost(postCounter);
+                if(posts.isEmpty()) {
+                    postCounter -= 1;
+                }
+                loadPost(posts);
+            }
         });
-        nextButton.setOnClickListener(v -> {
-            Toast.makeText(getContext(), "Last post", Toast.LENGTH_SHORT).show();
+        nextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                postCounter -= 1;
+
+                // to ensure counter does not go to negative
+                postCounter = Math.max(0, postCounter);
+
+                ArrayList<String> posts = db.loadPrivatePost(postCounter);
+                if(posts.isEmpty()) {
+                    postCounter += 1;
+                }
+                loadPost(posts);
+            }
         });
+
         return view;
     }
 
-    // Method to load the last post from the database
-    private boolean loadPost() {
-        Cursor cursor = db.getLastPublicPost();
-        if (cursor != null && cursor.moveToFirst()) {
-            int usernameIndex = cursor.getColumnIndex(USER_PUBLICPOST_COL);
-            int contentIndex = cursor.getColumnIndex(PUBLIC_POST_COL);
-            if (usernameIndex == -1 || contentIndex == -1) {
-                Toast.makeText(getContext(), "Database column not found", Toast.LENGTH_SHORT).show();
-                cursor.close();
-                return false;
-            }
-            Log.d("LoadPost", "Username Index: " + usernameIndex + ", Content Index: " + contentIndex);
-            if (cursor.getString(usernameIndex) != null) Log.d("LoadPost", "Username: " + cursor.getString(usernameIndex));
-            if (cursor.getString(contentIndex) != null) Log.d("LoadPost", "Content: " + cursor.getString(contentIndex));
-            String username = cursor.getString(usernameIndex);
-            String content = cursor.getString(contentIndex);
-            usernameView.setText(username);
-            contentView.setText(content);
-            cursor.close();
-            return true;
+    private void loadPost(ArrayList<String> posts) {
+        if (posts.isEmpty()) {
+            Toast.makeText(getContext(), "No posts available", Toast.LENGTH_SHORT).show();
         } else {
-            return false;
+            usernameView.setText(posts.get(0));
+            contentView.setText(posts.get(1));
         }
     }
 }
