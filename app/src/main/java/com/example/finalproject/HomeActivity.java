@@ -21,7 +21,7 @@ public class HomeActivity extends AppCompatActivity {
     private Database db;
     private TextView global;
     private TextView friends_Post;
-    private Button post, profile;
+    private Button post, profile, friends, settings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +33,8 @@ public class HomeActivity extends AppCompatActivity {
         friends_Post = findViewById(R.id.friendposts);
         post = findViewById(R.id.post);
         profile = findViewById(R.id.profile);
+        friends = findViewById(R.id.friends);
+        settings = findViewById(R.id.settings);
 
 
         global.setBackgroundColor(Color.parseColor("#BDE0FE"));
@@ -69,7 +71,6 @@ public class HomeActivity extends AppCompatActivity {
 
             }
         });
-        Button settings = findViewById(R.id.settings);
         settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -86,6 +87,17 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        friends.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HomeActivity.this, FriendsActivity.class);
+                intent.putExtra("Username", username);
+                startActivity(intent);
+            }
+        });
+
+
     }
 
 
