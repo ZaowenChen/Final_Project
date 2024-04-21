@@ -2,6 +2,8 @@ package com.example.finalproject;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashSet;
 
 public class FriendsActivity extends AppCompatActivity {
@@ -116,12 +119,40 @@ public class FriendsActivity extends AppCompatActivity {
                 String friendName = friendSearch.getText().toString();
                 if(!userSet.contains(friendName)) {
                     Toast.makeText(FriendsActivity.this, "Username not found.", Toast.LENGTH_SHORT).show();
-                    return;
+                } else {
+                    db.addFriendRequest(username, friendName);
+
+                    //Send notification
+                    String message = username + " has sent " + friendName + " a friend request.";
+                    start_Sensing_new(message);
+
+                    Toast.makeText(FriendsActivity.this, "Friend request sent!", Toast.LENGTH_SHORT).show();
+
                 }
-                db.addFriendRequest(username, friendName);
-                Toast.makeText(FriendsActivity.this, "Friend request sent!", Toast.LENGTH_SHORT).show();
+
             }
         });
+    }
+
+    public void start_Sensing_new(String message) {  //testing for upload frequency.
+
+        Log.d("MyActivity", "Notification On");
+
+        //Creating a pending intent for sendNotification class.
+        Intent intent = new Intent(this, sendNotification.class);
+        intent.putExtra("Message", message);
+        PendingIntent pendingIntent = null;
+
+        Log.d("Main sensing: ", "Pending intent starting");
+        //    pendingIntent = PendingIntent.getBroadcast(this, 40, intent, PendingIntent.FLAG_IMMUTABLE |PendingIntent.FLAG_UPDATE_CURRENT);
+        pendingIntent = PendingIntent.getBroadcast(this, 40, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        //Generating object of alarmManager using getSystemService method. Here ALARM_SERVICE is used to receive alarm manager with intent at a time.
+        AlarmManager alarmManager=(AlarmManager)getSystemService(ALARM_SERVICE);
+
+        //this method creates a repeating, exactly timed alarm
+        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), pendingIntent);
+        Log.d("===Sensing alarm===", "Friend Request Notification.");
     }
 
     public void onBackPressed() {
