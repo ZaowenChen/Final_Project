@@ -54,7 +54,7 @@ public class PublicFragment extends Fragment {
         ArrayList<String> posts = db.loadPublicPost(postCounter);
         // Load the last post initially
         loadPost(posts);
-        prevButton.setOnClickListener(new View.OnClickListener() {
+        nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 postCounter += 1;
@@ -65,7 +65,7 @@ public class PublicFragment extends Fragment {
                 loadPost(posts);
             }
         });
-        nextButton.setOnClickListener(new View.OnClickListener() {
+        prevButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 postCounter -= 1;
