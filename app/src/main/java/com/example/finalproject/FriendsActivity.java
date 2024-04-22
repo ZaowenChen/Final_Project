@@ -135,8 +135,8 @@ public class FriendsActivity extends AppCompatActivity {
         PendingIntent pendingIntent = null;
 
         Log.d("Main sensing: ", "Pending intent starting");
-        //    pendingIntent = PendingIntent.getBroadcast(this, 40, intent, PendingIntent.FLAG_IMMUTABLE |PendingIntent.FLAG_UPDATE_CURRENT);
-        pendingIntent = PendingIntent.getBroadcast(this, 40, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        pendingIntent = PendingIntent.getBroadcast(this, 40, intent, PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         //Generating object of alarmManager using getSystemService method. Here ALARM_SERVICE is used to receive alarm manager with intent at a time.
         AlarmManager alarmManager=(AlarmManager)getSystemService(ALARM_SERVICE);
