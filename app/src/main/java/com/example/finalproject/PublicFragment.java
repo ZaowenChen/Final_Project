@@ -22,6 +22,8 @@ public class PublicFragment extends Fragment {
     private Database db;
     private TextView usernameView, contentView;
     private Button prevButton, nextButton;
+    private int currentPostId = -1; // Start with an invalid ID
+
 
     private static int postCounter = 0;
 

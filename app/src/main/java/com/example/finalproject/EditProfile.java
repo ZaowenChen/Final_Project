@@ -1,5 +1,6 @@
 package com.example.finalproject;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -21,8 +22,10 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 public class EditProfile extends AppCompatActivity {
 
@@ -59,6 +62,8 @@ public class EditProfile extends AppCompatActivity {
         TextView gender_display = findViewById(R.id.gender_change);
         TextView birthday_display = findViewById(R.id.info2_change);
         TextView online_display = findViewById(R.id.info3_change);
+        Calendar calendar = Calendar.getInstance();
+
 
 
         // Show current items
@@ -148,20 +153,47 @@ public class EditProfile extends AppCompatActivity {
             }
         });
 
-        //Birthday change
+//        //Birthday change
+//        Button birthday_change = findViewById(R.id.birthday_change_btn);
+//        birthday_change.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                CalendarView inputCal = findViewById(R.id.calender);
+//                Calendar calendar = Calendar.getInstance();
+//                calendar.setTimeInMillis(inputCal.getDate());
+//                Log.d("DebugBirthday", "CalendarView Date in Millis: " + inputCal.getDate()); // Log the raw data from CalendarView
+//                curr_birthday = getDate(calendar);
+//                Log.d("DebugBirthday", "Formatted Birthday: " + curr_birthday); // Log the formatted date
+//                birthday_display.setText(curr_birthday);
+//                Toast.makeText(EditProfile.this, "Updated Birthday", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+
+        // Initialize the CalendarView
+        final CalendarView inputCal = findViewById(R.id.calender);
+        inputCal.setDate(calendar.getTimeInMillis(), true, true);
+// Listener for date changes
+        inputCal.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            @Override
+            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
+                calendar.set(Calendar.YEAR, year);
+                calendar.set(Calendar.MONTH, month);
+                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            }
+        });
+
         Button birthday_change = findViewById(R.id.birthday_change_btn);
         birthday_change.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CalendarView inputCal = findViewById(R.id.calender);
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTimeInMillis(inputCal.getDate());
-
-                curr_birthday = getDate(calendar);
-                birthday_display.setText(curr_birthday);
+                curr_birthday = getDate(calendar); // Format the date from the calendar instance
+                birthday_display.setText(curr_birthday); // Update the display
                 Toast.makeText(EditProfile.this, "Updated Birthday", Toast.LENGTH_SHORT).show();
+                Log.d("EditProfile", "Birthday updated to: " + curr_birthday);
             }
         });
+
+
 
         // Online change
         Button online_change = findViewById(R.id.time_change_btn);
