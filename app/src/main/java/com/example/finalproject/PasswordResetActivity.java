@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -60,7 +61,6 @@ public class PasswordResetActivity extends AppCompatActivity {
                         try {
                             savePasswordChangeLog(username, newPass);
                             Toast.makeText(PasswordResetActivity.this, "Successfully changed password", Toast.LENGTH_LONG).show();
-
                             Intent intent = new Intent(PasswordResetActivity.this, AccountSettingActivity.class);
                             intent.putExtra("Username", username);
                             startActivity(intent);
@@ -74,14 +74,20 @@ public class PasswordResetActivity extends AppCompatActivity {
 
     }
     private void savePasswordChangeLog(String username, String newPassword) throws JSONException, IOException {
-        String filename = "password_change_log.json";
-        // Use the standard Documents directory path as per the logout time save method.
-        String myDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + "/Documents/" + filename;
-        File file = new File(myDir);
+
+        String filename = "password_reset_log.json";
+        // Use the proper method to get the Downloads directory
+        File downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        if (!downloadsDir.exists()) {
+            if (!downloadsDir.mkdirs()) {
+                Log.e("passwordreset log", "Failed to create directory");
+                return;
+            }
+        }
+        File file = new File(downloadsDir, filename);
         if (!file.exists()) {
             file.createNewFile();
         }
-
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
         String timestamp = sdf.format(new Date());
 
