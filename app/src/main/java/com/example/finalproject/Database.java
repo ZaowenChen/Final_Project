@@ -232,22 +232,29 @@ public class Database extends SQLiteOpenHelper {
 
         Cursor cursor = db.rawQuery(sql, null);
         ArrayList<String> output = new ArrayList<>();
-        if (cursor != null) {
+        if (cursor != null && cursor.moveToFirst()) {
             try {
                 Log.d("Cursor", "loadPrivatePost: Cursor Found==========");
-                while (cursor.moveToNext() && counter-- > 0) {
-                    int usernameIndex = cursor.getColumnIndex(USER_PRIVATEPOST_COL);
-                    int contentIndex = cursor.getColumnIndex(PRIVATE_POST_COL);
-                    if (usernameIndex != -1 && contentIndex != -1) {
-                        String username = cursor.getString(usernameIndex);
-                        String content = cursor.getString(contentIndex);
-                        if (username != null && content != null) {
-                            Log.d("LoadPost", "Username: " + username + ", Content: " + content);
-                            output.add(username);
-                            output.add(content);
-                        }
+
+                for (int i = 0; i < counter; i++) {
+                    if(!cursor.moveToNext()) {
+                        return output;
                     }
                 }
+
+
+                int usernameIndex = cursor.getColumnIndex(USER_PRIVATEPOST_COL);
+                int contentIndex = cursor.getColumnIndex(PRIVATE_POST_COL);
+                if (usernameIndex != -1 && contentIndex != -1) {
+                    String username = cursor.getString(usernameIndex);
+                    String content = cursor.getString(contentIndex);
+                    if (username != null && content != null) {
+                        Log.d("LoadPost", "Username: " + username + ", Content: " + content);
+                        output.add(username);
+                        output.add(content);
+                    }
+                }
+
             } finally {
                 cursor.close();  // Ensure cursor is always closed
             }

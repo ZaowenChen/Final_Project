@@ -48,7 +48,9 @@ public class PrivateFragment extends Fragment {
         contentView = view.findViewById(R.id.private_postcontent);
         prevButton = view.findViewById(R.id.private_prev);
         nextButton = view.findViewById(R.id.private_next);
-        loadNextPost(); // Load initial post
+
+        ArrayList<String> posts = db.loadPrivatePost(postCounter, username);
+        loadPost(posts); // Load initial post
 
         prevButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,29 +78,29 @@ public class PrivateFragment extends Fragment {
         ArrayList<String> posts = db.loadPrivatePost(postCounter, username);
         if (posts == null || posts.isEmpty()) {
             postCounter -= 1; // Rollback if no new post
-            Toast.makeText(getContext(), "No more posts", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "No more next posts", Toast.LENGTH_SHORT).show();
         } else {
             loadPost(posts);
         }
     }
 
     private void loadPreviousPost() {
-        if (postCounter > 0) {
-            postCounter -= 1;
-            ArrayList<String> posts = db.loadPrivatePost(postCounter, username);
-            if (posts == null || posts.isEmpty()) {
-                postCounter += 1; // Rollback if no previous post
-            } else {
-                loadPost(posts);
-            }
+        postCounter -= 1;
+        // to ensure counter does not go to negative
+        postCounter = Math.max(0, postCounter);
+
+        ArrayList<String> posts = db.loadPrivatePost(postCounter, username);
+        if (postCounter > 0 && posts.isEmpty()) {
+            postCounter += 1; // Rollback if no previous post
+            Toast.makeText(getContext(), "No more prev posts", Toast.LENGTH_SHORT).show();
+        } else {
+            loadPost(posts);
         }
     }
 
     private void loadPost(ArrayList<String> posts) {
         if (posts == null || posts.isEmpty()) {
             Toast.makeText(getContext(), "No posts available", Toast.LENGTH_SHORT).show();
-            usernameView.setText("");
-            contentView.setText("");
         } else {
             usernameView.setText(posts.get(0));
             contentView.setText(posts.get(1));
