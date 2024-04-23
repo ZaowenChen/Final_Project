@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -31,9 +32,9 @@ public class Database extends SQLiteOpenHelper {
     private static final String DATE_PRIVATEPOST_COL = "Date";
 
     private static final String TABLE3_NAME = "PublicPost";
-    public static final String PUBLICPOST_ID_COL = "Post_ID";
-    public static final String USER_PUBLICPOST_COL = "Username";
-    public  static final String PUBLIC_POST_COL = "Post";
+    private static final String PUBLICPOST_ID_COL = "Post_ID";
+    private static final String USER_PUBLICPOST_COL = "Username";
+    private  static final String PUBLIC_POST_COL = "Post";
     private static final String DATE_PUBLICPOST_COL = "Date";
 
     private static final String TABLE4_NAME = "Friendzone";
@@ -163,38 +164,12 @@ public class Database extends SQLiteOpenHelper {
         db.insert(TABLE3_NAME, null, values);
         db.close();
     }
-    public Cursor getLastPrivatePost() {
-        SQLiteDatabase db = this.getReadableDatabase();
-        String sql = "SELECT * FROM " + TABLE2_NAME + " ORDER BY " + PRIVATEPOST_ID_COL + " DESC LIMIT 1";
-        Cursor cursorprivate = db.rawQuery(sql, null);
-        return cursorprivate;
-    }
 
     public Cursor getLastPublicPost() {
         SQLiteDatabase db = this.getReadableDatabase();
         String sql = "SELECT * FROM " + TABLE3_NAME + " ORDER BY " + PUBLICPOST_ID_COL + " DESC LIMIT 1";
         Cursor cursorpublic = db.rawQuery(sql, null);
         return cursorpublic;
-    }
-    public Cursor getPublicPostAt(int postId, boolean next) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        String sql;
-        if (next) {
-            sql = "SELECT * FROM " + TABLE3_NAME + " WHERE " + PUBLICPOST_ID_COL + " > " + postId + " ORDER BY " + PUBLICPOST_ID_COL + " ASC LIMIT 1";
-        } else {
-            sql = "SELECT * FROM " + TABLE3_NAME + " WHERE " + PUBLICPOST_ID_COL + " < " + postId + " ORDER BY " + PUBLICPOST_ID_COL + " DESC LIMIT 1";
-        }
-        return db.rawQuery(sql, null);
-    }
-    public Cursor getPrivatePostAt(int postId, boolean next) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        String sql;
-        if (next) {
-            sql = "SELECT * FROM " + TABLE2_NAME + " WHERE " + PRIVATEPOST_ID_COL + " > " + postId + " ORDER BY " + PRIVATEPOST_ID_COL + " ASC LIMIT 1";
-        } else {
-            sql = "SELECT * FROM " + TABLE2_NAME + " WHERE " + PRIVATEPOST_ID_COL + " < " + postId + " ORDER BY " + PRIVATEPOST_ID_COL + " DESC LIMIT 1";
-        }
-        return db.rawQuery(sql, null);
     }
 
 
@@ -211,8 +186,8 @@ public class Database extends SQLiteOpenHelper {
     // Method to remove a friend from the Friendzone table
     public void removeFriend(String username, String friend) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE5_NAME, USER_COL + " = ? AND " + FRIEND_COL + " = ?", new String[]{username, friend});
-        db.delete(TABLE5_NAME, FRIEND_COL + " = ? AND " + USER_COL + " = ?", new String[]{username, friend});
+        db.delete(TABLE4_NAME, USER_COL + " = ? AND " + FRIEND_COL + " = ?", new String[]{username, friend});
+        db.delete(TABLE4_NAME, FRIEND_COL + " = ? AND " + USER_COL + " = ?", new String[]{username, friend});
         db.close();
     }
 
@@ -230,8 +205,79 @@ public class Database extends SQLiteOpenHelper {
     // Method to delete a friend request
     public void deleteFriendRequest(String username, String friend) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE4_NAME, USER_COL + " = ? AND " + FRIEND_COL + " = ?", new String[]{username, friend});
+        db.delete(TABLE5_NAME, USER_COL + " = ? AND " + FRIEND_COL + " = ?", new String[]{username, friend});
         db.close();
+    }
+
+    public ArrayList<String> loadPrivatePost(int counter, String user) {
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = this.getFriendPostsCursor(user);
+
+        ArrayList<String> output = new ArrayList<String>();
+        if (cursor != null && cursor.moveToFirst()) {
+
+
+            Log.d("loadPublic", "loadPublicPost: cursor not null");
+            for (int i = 0; i < counter; i++) {
+                if(!cursor.moveToNext()) {
+                    return output;
+                }
+            }
+
+            // Directly using column names, assuming constants from the provided example
+            int usernameIndex = cursor.getColumnIndex(USER_PRIVATEPOST_COL);  // Correct use of constants
+            int contentIndex = cursor.getColumnIndex(PRIVATE_POST_COL);       // Correct use of constants
+            if (usernameIndex == -1 || contentIndex == -1) {
+                cursor.close();
+                return output;
+            }
+            Log.d("LoadPost", "Username Index: " + usernameIndex + ", Content Index: " + contentIndex);
+            String username = cursor.getString(usernameIndex);
+            String content = cursor.getString(contentIndex);
+            if (username != null && content != null) {
+                Log.d("LoadPost", "Username: " + username + ", Content: " + content);
+                output.add(username);
+                output.add(content);
+            }
+            cursor.close();
+        }
+        return output;
+    }
+
+    public ArrayList<String> loadPublicPost(int counter) {
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        String sql = "SELECT * FROM " + TABLE3_NAME + " ORDER BY " + PUBLICPOST_ID_COL + " DESC ";
+        Cursor cursor = db.rawQuery(sql, null);
+
+        ArrayList<String> output = new ArrayList<String>();
+        if (cursor != null && cursor.moveToFirst()) {
+
+            for (int i = 0; i < counter; i++) {
+                if(!cursor.moveToNext()) {
+                    return output;
+                }
+            }
+
+            // Directly using column names, assuming constants from the provided example
+            int usernameIndex = cursor.getColumnIndex(USER_PUBLICPOST_COL);  // Correct use of constants
+            int contentIndex = cursor.getColumnIndex(PUBLIC_POST_COL);       // Correct use of constants
+            if (usernameIndex == -1 || contentIndex == -1) {
+                cursor.close();
+                return output;
+            }
+            Log.d("LoadPost", "Username Index: " + usernameIndex + ", Content Index: " + contentIndex);
+            String username = cursor.getString(usernameIndex);
+            String content = cursor.getString(contentIndex);
+            if (username != null && content != null) {
+                Log.d("LoadPost", "Username: " + username + ", Content: " + content);
+                output.add(username);
+                output.add(content);
+            }
+            cursor.close();
+        }
+        return output;
     }
 
 
@@ -263,6 +309,23 @@ public class Database extends SQLiteOpenHelper {
         }
         db.close();
         return result;
+    }
+
+    private Cursor getFriendPostsCursor(String username) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        ArrayList<String> friendsList = this.getFriends(username);
+        if(friendsList.isEmpty()) {
+            return null;
+        }
+        String cond = " ( " + friendsList.get(0);
+        for (int i = 1; i < friendsList.size(); i++) {
+            cond = cond + " OR " + friendsList.get(i);
+        }
+        cond += ") ";
+
+        String sql = "SELECT * FROM " + TABLE2_NAME + " WHERE " + USER_COL + "=" + cond +  " ORDER BY " + PRIVATEPOST_ID_COL + " DESC ";
+
+        return db.rawQuery(sql, null);
     }
 
 

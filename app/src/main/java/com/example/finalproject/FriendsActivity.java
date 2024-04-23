@@ -43,21 +43,7 @@ public class FriendsActivity extends AppCompatActivity {
         //build, inflate, and store checkboxes for friendsList and requestsList
         if(!friendsList.isEmpty()) {
             for (String friend : friendsList) {
-                TextView tx = new TextView(this);
-                tx.setText(friend);
-                tx.setTextSize(16);
-                tx.setPadding(20,5,0,5);
-
-                tx.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(FriendsActivity.this, FriendProfileActivity.class);
-                        intent.putExtra("Friend", friend);
-                        intent.putExtra("Username", username);
-                        startActivity(intent);
-                    }
-                });
-
+                TextView tx = friendMaker(friend);
                 friendsLayout.addView(tx);
             }
         }
@@ -84,13 +70,15 @@ public class FriendsActivity extends AppCompatActivity {
                 for (int i = requestChList.size()-1; i >= 0; i--) {
                     if(requestChList.get(i).isChecked()) {
                         String friendname = requestsList.get(i);
+                        Log.d("accept", "onClick: addfriend");
                         db.addFriend(username, friendname);
+                        Log.d("accept", "onClick: deleteFriendReq");
                         db.deleteFriendRequest(friendname, username);
+                        Log.d("accept", "onClick: -checkbox +textview");
                         friendsList.add(friendname);
                         requestsList.remove(i);
-                        CheckBox ch = requestChList.get(i);
-                        friendsLayout.addView(ch);
-                        requestsLayout.removeView(ch);
+                        friendsLayout.addView(friendMaker(friendname));
+                        requestsLayout.removeView(requestChList.get(i));
                         requestChList.remove(i);
                     }
                 }
@@ -119,16 +107,20 @@ public class FriendsActivity extends AppCompatActivity {
                 String friendName = friendSearch.getText().toString();
                 if(!userSet.contains(friendName)) {
                     Toast.makeText(FriendsActivity.this, "Username not found.", Toast.LENGTH_SHORT).show();
+                    Log.d("addFriend", "onClick: user not found");
                 } else {
                     db.addFriendRequest(username, friendName);
 
                     //Send notification
+                    Log.d("addFriend", "onClick: user found, senting notif");
                     String message = username + " has sent " + friendName + " a friend request.";
                     start_Sensing_new(message);
 
+                    Log.d("addFriend", "onClick: notif done");
                     Toast.makeText(FriendsActivity.this, "Friend request sent!", Toast.LENGTH_SHORT).show();
 
                 }
+                friendSearch.setText("");
 
             }
         });
@@ -144,15 +136,33 @@ public class FriendsActivity extends AppCompatActivity {
         PendingIntent pendingIntent = null;
 
         Log.d("Main sensing: ", "Pending intent starting");
-        //    pendingIntent = PendingIntent.getBroadcast(this, 40, intent, PendingIntent.FLAG_IMMUTABLE |PendingIntent.FLAG_UPDATE_CURRENT);
-        pendingIntent = PendingIntent.getBroadcast(this, 40, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        pendingIntent = PendingIntent.getBroadcast(this, 40, intent, PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         //Generating object of alarmManager using getSystemService method. Here ALARM_SERVICE is used to receive alarm manager with intent at a time.
         AlarmManager alarmManager=(AlarmManager)getSystemService(ALARM_SERVICE);
 
         //this method creates a repeating, exactly timed alarm
-        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), pendingIntent);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, 1000, pendingIntent);
         Log.d("===Sensing alarm===", "Friend Request Notification.");
+    }
+
+    private TextView friendMaker(String friend) {
+        TextView tx = new TextView(this);
+        tx.setText(friend);
+        tx.setTextSize(16);
+        tx.setPadding(20,5,0,5);
+
+        tx.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(FriendsActivity.this, FriendProfileActivity.class);
+                intent.putExtra("Friend", friend);
+                intent.putExtra("Username", username);
+                startActivity(intent);
+            }
+        });
+        return tx;
     }
 
     public void onBackPressed() {

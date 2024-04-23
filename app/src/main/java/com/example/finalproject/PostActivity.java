@@ -1,7 +1,10 @@
 package com.example.finalproject;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -52,10 +55,20 @@ public class PostActivity extends AppCompatActivity {
             Toast.makeText(this, "Please select post visibility", Toast.LENGTH_LONG).show();
         }
         noteInput.setText("");        // Clear the input field after posting
+        Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+        intent.putExtra("Username", username);
+        startActivity(intent);
     }
     private String getCurrentDate() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
         Date date = new Date();
         return dateFormat.format(date);
+    }
+
+    public void onBackPressed() {
+        // Close app when back pressed
+        Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+        intent.putExtra("Username", username);
+        startActivity(intent);
     }
 }
