@@ -210,55 +210,51 @@ public class Database extends SQLiteOpenHelper {
     }
 
     public ArrayList<String> loadPrivatePost(int counter, String user) {
-
-        SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db = this.getReadableDatabase();  // Open database connection
         ArrayList<String> friendsList = this.getFollowings(user);
-        if(friendsList.isEmpty()) {
+        if (friendsList.isEmpty()) {
+            //();  // Close database before returning
             return null;
         }
 
-        String cond = " (" + friendsList.get(0);
-        for (int i = 1; i < friendsList.size(); i++) {
-            cond = cond + " OR " + friendsList.get(i);
+        StringBuilder condBuilder = new StringBuilder();
+        condBuilder.append("(");
+        for (int i = 0; i < friendsList.size(); i++) {
+            condBuilder.append("'").append(friendsList.get(i).replace("'", "''")).append("'");
+            if (i < friendsList.size() - 1) {
+                condBuilder.append(", ");
+            }
         }
-        cond += ") ";
+        condBuilder.append(")");
 
-
-        String sql = "SELECT * FROM " + TABLE2_NAME + " WHERE " + USER_COL + "=" + cond +  " ORDER BY " + PRIVATEPOST_ID_COL + " DESC ";
-        //String sql = "SELECT * FROM " + TABLE2_NAME + " ORDER BY " + PRIVATE_POST_COL + " DESC ";
-        Log.d("DATABASE ========", "getFriendPostsCursor:  " + sql);
+        String sql = "SELECT * FROM " + TABLE2_NAME + " WHERE " + USER_COL + " IN " + condBuilder.toString() + " ORDER BY " + PRIVATEPOST_ID_COL + " DESC ";
+        Log.d("DATABASE ========", "getFriendPostsCursor: " + sql);
 
         Cursor cursor = db.rawQuery(sql, null);
-        Log.d("Cursor", "loadPrivatePost: Cursor Found==========");
-
-        ArrayList<String> output = new ArrayList<String>();
-        if (cursor != null && cursor.moveToFirst()) {
-
-            Log.d("loadPrivate", "loadPrivatePost: cursor not null");
-            for (int i = 0; i < counter; i++) {
-                if(!cursor.moveToNext()) {
-                    return output;
+        ArrayList<String> output = new ArrayList<>();
+        if (cursor != null) {
+            try {
+                Log.d("Cursor", "loadPrivatePost: Cursor Found==========");
+                while (cursor.moveToNext() && counter-- > 0) {
+                    int usernameIndex = cursor.getColumnIndex(USER_PRIVATEPOST_COL);
+                    int contentIndex = cursor.getColumnIndex(PRIVATE_POST_COL);
+                    if (usernameIndex != -1 && contentIndex != -1) {
+                        String username = cursor.getString(usernameIndex);
+                        String content = cursor.getString(contentIndex);
+                        if (username != null && content != null) {
+                            Log.d("LoadPost", "Username: " + username + ", Content: " + content);
+                            output.add(username);
+                            output.add(content);
+                        }
+                    }
                 }
+            } finally {
+                cursor.close();  // Ensure cursor is always closed
             }
-
-            // Directly using column names, assuming constants from the provided example
-            int usernameIndex = cursor.getColumnIndex(USER_PRIVATEPOST_COL);  // Correct use of constants
-            int contentIndex = cursor.getColumnIndex(PRIVATE_POST_COL);       // Correct use of constants
-            if (usernameIndex == -1 || contentIndex == -1) {
-                return output;
-            }
-            Log.d("LoadPost", "Username Index: " + usernameIndex + ", Content Index: " + contentIndex);
-            String username = cursor.getString(usernameIndex);
-            String content = cursor.getString(contentIndex);
-            if (username != null && content != null) {
-                Log.d("LoadPost", "Username: " + username + ", Content: " + content);
-                output.add(username);
-                output.add(content);
-            }
-            cursor.close();
         }
         return output;
     }
+
 
     public ArrayList<String> loadPublicPost(int counter) {
 
@@ -326,41 +322,91 @@ public class Database extends SQLiteOpenHelper {
 //        return result;
 //    }
 
-    public ArrayList<String> getFollowings(String username) {
-        ArrayList<String> result = new ArrayList<String>();
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor1 = db.query(TABLE4_NAME, null, FRIEND_COL + "=?",
+//    public ArrayList<String> getFollowings(String username) {
+//        ArrayList<String> result = new ArrayList<String>();
+//        SQLiteDatabase db = this.getReadableDatabase();
+//        Cursor cursor1 = db.query(TABLE4_NAME, null, FRIEND_COL + "=?",
+//                new String[]{username}, null, null, null);
+//        if(cursor1 != null) {
+//            int friendIndex = cursor1.getColumnIndex(USER_COL);
+//            if(friendIndex!= -1) {
+//                while(cursor1.moveToNext()) {
+//                    result.add(cursor1.getString(friendIndex));
+//                }
+//            }
+//            cursor1.close();
+//        }
+//        db.close();
+//        return result;
+//    }
+public ArrayList<String> getFollowings(String username) {
+    ArrayList<String> result = new ArrayList<>();
+    SQLiteDatabase db = this.getReadableDatabase();
+    Cursor cursor = null;
+    try {
+        cursor = db.query(TABLE4_NAME, new String[]{USER_COL}, FRIEND_COL + "=?",
                 new String[]{username}, null, null, null);
-        if(cursor1 != null) {
-            int friendIndex = cursor1.getColumnIndex(USER_COL);
-            if(friendIndex!= -1) {
-                while(cursor1.moveToNext()) {
-                    result.add(cursor1.getString(friendIndex));
-                }
+        if (cursor != null && cursor.moveToFirst()) {
+            int friendIndex = cursor.getColumnIndex(USER_COL);
+            while (!cursor.isAfterLast()) {
+                result.add(cursor.getString(friendIndex));
+                cursor.moveToNext();
             }
-            cursor1.close();
         }
-        db.close();
-        return result;
-    }
-
-    public ArrayList<String> getFollowers(String username) {
-        ArrayList<String> result = new ArrayList<String>();
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE4_NAME, null, USER_COL + "=?",
-                new String[]{username}, null, null, null);
+    } catch (Exception e) {
+        Log.e("Database", "Error while trying to get followings for user " + username, e);
+    } finally {
         if (cursor != null) {
-            int friendIndex = cursor.getColumnIndex(FRIEND_COL);
-            if (friendIndex != -1) {
-                while (cursor.moveToNext()) {
-                    result.add(cursor.getString(friendIndex));
-                }
-            }
             cursor.close();
         }
-        db.close();
-        return result;
+        //db.close();
     }
+    return result;
+}
+
+
+//    public ArrayList<String> getFollowers(String username) {
+//        ArrayList<String> result = new ArrayList<String>();
+//        SQLiteDatabase db = this.getReadableDatabase();
+//        Cursor cursor = db.query(TABLE4_NAME, null, USER_COL + "=?",
+//                new String[]{username}, null, null, null);
+//        if (cursor != null) {
+//            int friendIndex = cursor.getColumnIndex(FRIEND_COL);
+//            if (friendIndex != -1) {
+//                while (cursor.moveToNext()) {
+//                    result.add(cursor.getString(friendIndex));
+//                }
+//            }
+//            cursor.close();
+//        }
+//        db.close();
+//        return result;
+//    }
+public ArrayList<String> getFollowers(String username) {
+    ArrayList<String> result = new ArrayList<>();
+    SQLiteDatabase db = this.getReadableDatabase();
+    Cursor cursor = null;
+    try {
+        cursor = db.query(TABLE4_NAME, new String[]{FRIEND_COL}, USER_COL + "=?",
+                new String[]{username}, null, null, null);
+        if (cursor != null && cursor.moveToFirst()) {
+            int friendIndex = cursor.getColumnIndex(FRIEND_COL);
+            while (!cursor.isAfterLast()) {
+                result.add(cursor.getString(friendIndex));
+                cursor.moveToNext();
+            }
+        }
+    } catch (Exception e) {
+        Log.e("Database", "Error while trying to get followers for user " + username, e);
+    } finally {
+        if (cursor != null) {
+            cursor.close();
+        }
+        //db.close();
+    }
+    return result;
+}
+
 
     private Cursor getFriendPostsCursor(String username) {
         SQLiteDatabase db = this.getReadableDatabase();
@@ -467,6 +513,7 @@ public class Database extends SQLiteOpenHelper {
         boolean exists = cursor.getCount() > 0;
         cursor.close();
         return exists;
+
     }
 
     public boolean validateUser(String username, String password) {
@@ -483,8 +530,11 @@ public class Database extends SQLiteOpenHelper {
                 return storedPassword.equals(hashedPassword);
             }
             cursor.close();
+            db.close();
+
         }
         return false;
+
     }
 
 }

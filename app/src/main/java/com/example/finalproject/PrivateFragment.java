@@ -9,7 +9,6 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
-import android.util.Size;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +28,7 @@ public class PrivateFragment extends Fragment {
     public PrivateFragment() {
         // Required empty public constructor
     }
+
     public static PrivateFragment newInstance() {
         return new PrivateFragment();
     }
@@ -36,62 +36,57 @@ public class PrivateFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        db = new Database(getContext(), "UserDatabase.db");
+        db = new Database(getActivity().getApplicationContext(), "UserDatabase.db");
         // Inflate the layout for this fragment
-        View view =  inflater.inflate(R.layout.fragment_private, container, false);
-        //Set content
+        View view = inflater.inflate(R.layout.fragment_private, container, false);
         username = getArguments().getString("Username");
         usernameView = view.findViewById(R.id.private_username);
         contentView = view.findViewById(R.id.private_postcontent);
         prevButton = view.findViewById(R.id.private_prev);
         nextButton = view.findViewById(R.id.private_next);
-        ArrayList<String> posts = db.loadPrivatePost(postCounter, username);
-        // Load the last post initially
-        loadPost(posts);
-        nextButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                postCounter += 1;
-                ArrayList<String> posts = db.loadPrivatePost(postCounter, username);
-                if(posts.isEmpty()) {
-                    postCounter -= 1;
-                }
-                loadPost(posts);
-            }
-        });
-        prevButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                postCounter -= 1;
+        loadNextPost(); // Load initial post
 
-                // to ensure counter does not go to negative
-                postCounter = Math.max(0, postCounter);
-
-                ArrayList<String> posts = db.loadPrivatePost(postCounter, username);
-                if(posts.isEmpty()) {
-                    postCounter += 1;
-                }
-                loadPost(posts);
-            }
-        });
+        nextButton.setOnClickListener(v -> loadNextPost());
+        prevButton.setOnClickListener(v -> loadPreviousPost());
 
         return view;
     }
 
+    private void loadNextPost() {
+        postCounter += 1;
+        ArrayList<String> posts = db.loadPrivatePost(postCounter, username);
+        if (posts == null || posts.isEmpty()) {
+            postCounter -= 1; // Rollback if no new post
+            Toast.makeText(getContext(), "No more posts", Toast.LENGTH_SHORT).show();
+        } else {
+            loadPost(posts);
+        }
+    }
+
+    private void loadPreviousPost() {
+        if (postCounter > 0) {
+            postCounter -= 1;
+            ArrayList<String> posts = db.loadPrivatePost(postCounter, username);
+            if (posts == null || posts.isEmpty()) {
+                postCounter += 1; // Rollback if no previous post
+            } else {
+                loadPost(posts);
+            }
+        }
+    }
+
     private void loadPost(ArrayList<String> posts) {
-        if (posts.isEmpty()) {
+        if (posts == null || posts.isEmpty()) {
             Toast.makeText(getContext(), "No posts available", Toast.LENGTH_SHORT).show();
+            usernameView.setText("");
+            contentView.setText("");
         } else {
             usernameView.setText(posts.get(0));
             contentView.setText(posts.get(1));
         }
     }
-
-
-
 }

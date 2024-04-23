@@ -45,7 +45,7 @@ public class PublicFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        db = new Database(getContext(), "UserDatabase.db");
+        db = new Database(getActivity().getApplicationContext(), "UserDatabase.db");
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_public, container, false);
         //Set content
@@ -82,7 +82,7 @@ public class PublicFragment extends Fragment {
                 loadPost(posts);
             }
         });
-
+        db.close();
         return view;
     }
 

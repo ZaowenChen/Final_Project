@@ -18,7 +18,6 @@ import org.w3c.dom.Text;
 
 public class HomeActivity extends AppCompatActivity {
 
-    private Database db;
     private TextView global;
     private TextView friends_Post;
     private Button post, profile, friends, settings;

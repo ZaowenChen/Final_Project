@@ -80,6 +80,7 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(returnSignup);
             }
         });
+        db.close();
     }
     private void requestAppPermissions() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
