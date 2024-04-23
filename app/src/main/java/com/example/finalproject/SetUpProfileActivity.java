@@ -1,5 +1,6 @@
 package com.example.finalproject;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -25,6 +26,8 @@ import java.util.Calendar;
 public class SetUpProfileActivity extends AppCompatActivity {
 
     private String selectedpic = "Yoshi";
+    private Calendar birth_calendar = Calendar.getInstance();
+
 
     // implement the share preference in the setup activity
     @Override
@@ -68,6 +71,15 @@ public class SetUpProfileActivity extends AppCompatActivity {
                 // No action needed here for nothing is selected
             }
         });
+        birthdayInput.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            @Override
+            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
+                birth_calendar.set(Calendar.YEAR, year);
+                birth_calendar.set(Calendar.MONTH, month);
+                birth_calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            }
+        });
+
 
         setup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,10 +96,12 @@ public class SetUpProfileActivity extends AppCompatActivity {
                     gender = selected.getText().toString();
                 }
 
-                Calendar birth_calendar = Calendar.getInstance();
-                birth_calendar.setTimeInMillis(birthdayInput.getDate());
+//                Calendar birth_calendar = Calendar.getInstance();
+//                birth_calendar.setTimeInMillis(birthdayInput.getDate());
 
                 String birthday = getDate(birth_calendar);
+
+
                 String online = getTime(onlineTime.getHour(), onlineTime.getMinute());
 
                 saveUserInfo(selectedpic, bio, gender, birthday, online, username);
