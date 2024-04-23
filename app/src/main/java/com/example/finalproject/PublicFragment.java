@@ -63,8 +63,10 @@ public class PublicFragment extends Fragment {
                 ArrayList<String> posts = db.loadPublicPost(postCounter);
                 if(posts.isEmpty()) {
                     postCounter -= 1;
+                    Toast.makeText(getContext(), "No more next posts", Toast.LENGTH_SHORT).show();
+                } else {
+                    loadPost(posts);
                 }
-                loadPost(posts);
             }
         });
         prevButton.setOnClickListener(new View.OnClickListener() {
@@ -76,13 +78,15 @@ public class PublicFragment extends Fragment {
                 postCounter = Math.max(0, postCounter);
 
                 ArrayList<String> posts = db.loadPublicPost(postCounter);
-                if(posts.isEmpty()) {
+                if(postCounter > 0 && posts.isEmpty()) {
                     postCounter += 1;
+                    Toast.makeText(getContext(), "No more prev posts", Toast.LENGTH_SHORT).show();
+                } else {
+                    loadPost(posts);
                 }
-                loadPost(posts);
             }
         });
-        db.close();
+
         return view;
     }
 
