@@ -50,9 +50,24 @@ public class PrivateFragment extends Fragment {
         nextButton = view.findViewById(R.id.private_next);
         loadNextPost(); // Load initial post
 
-        nextButton.setOnClickListener(v -> loadNextPost());
-        prevButton.setOnClickListener(v -> loadPreviousPost());
+        prevButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadPreviousPost();
+                Log.d("button clicked", "prev button clicked");
 
+            }
+        });
+
+
+        nextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadNextPost();
+                Log.d("button clicked", "next button clicked");
+
+            }
+        });
         return view;
     }
 
