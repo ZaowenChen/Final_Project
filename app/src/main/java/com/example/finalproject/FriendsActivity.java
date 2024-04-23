@@ -120,6 +120,7 @@ public class FriendsActivity extends AppCompatActivity {
                     Toast.makeText(FriendsActivity.this, "Friend request sent!", Toast.LENGTH_SHORT).show();
 
                 }
+                friendSearch.setText("");
 
             }
         });
@@ -142,7 +143,7 @@ public class FriendsActivity extends AppCompatActivity {
         AlarmManager alarmManager=(AlarmManager)getSystemService(ALARM_SERVICE);
 
         //this method creates a repeating, exactly timed alarm
-        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), pendingIntent);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, 1000, pendingIntent);
         Log.d("===Sensing alarm===", "Friend Request Notification.");
     }
 
