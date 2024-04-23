@@ -298,54 +298,6 @@ public class Database extends SQLiteOpenHelper {
         return output;
     }
 
-
-
-//    public ArrayList<String> getFriends(String username) {
-//        ArrayList<String> result = new ArrayList<String>();
-//        SQLiteDatabase db = this.getReadableDatabase();
-//        Cursor cursor = db.query(TABLE4_NAME, null, USER_COL + "=?",
-//                new String[]{username}, null, null, null);
-//        if(cursor != null) {
-//            int friendIndex = cursor.getColumnIndex(FRIEND_COL);
-//            if(friendIndex!= -1) {
-//                while(cursor.moveToNext()) {
-//                    result.add(cursor.getString(friendIndex));
-//                }
-//            }
-//            cursor.close();
-//        }
-//        Cursor cursor1 = db.query(TABLE4_NAME, null, FRIEND_COL + "=?",
-//                new String[]{username}, null, null, null);
-//        if(cursor1 != null) {
-//            int friendIndex = cursor1.getColumnIndex(USER_COL);
-//            if(friendIndex!= -1) {
-//                while(cursor1.moveToNext()) {
-//                    result.add(cursor1.getString(friendIndex));
-//                }
-//            }
-//            cursor1.close();
-//        }
-//        db.close();
-//        return result;
-//    }
-
-//    public ArrayList<String> getFollowings(String username) {
-//        ArrayList<String> result = new ArrayList<String>();
-//        SQLiteDatabase db = this.getReadableDatabase();
-//        Cursor cursor1 = db.query(TABLE4_NAME, null, FRIEND_COL + "=?",
-//                new String[]{username}, null, null, null);
-//        if(cursor1 != null) {
-//            int friendIndex = cursor1.getColumnIndex(USER_COL);
-//            if(friendIndex!= -1) {
-//                while(cursor1.moveToNext()) {
-//                    result.add(cursor1.getString(friendIndex));
-//                }
-//            }
-//            cursor1.close();
-//        }
-//        db.close();
-//        return result;
-//    }
 public ArrayList<String> getFollowings(String username) {
     ArrayList<String> result = new ArrayList<>();
     SQLiteDatabase db = this.getReadableDatabase();
@@ -371,24 +323,6 @@ public ArrayList<String> getFollowings(String username) {
     return result;
 }
 
-
-//    public ArrayList<String> getFollowers(String username) {
-//        ArrayList<String> result = new ArrayList<String>();
-//        SQLiteDatabase db = this.getReadableDatabase();
-//        Cursor cursor = db.query(TABLE4_NAME, null, USER_COL + "=?",
-//                new String[]{username}, null, null, null);
-//        if (cursor != null) {
-//            int friendIndex = cursor.getColumnIndex(FRIEND_COL);
-//            if (friendIndex != -1) {
-//                while (cursor.moveToNext()) {
-//                    result.add(cursor.getString(friendIndex));
-//                }
-//            }
-//            cursor.close();
-//        }
-//        db.close();
-//        return result;
-//    }
 public ArrayList<String> getFollowers(String username) {
     ArrayList<String> result = new ArrayList<>();
     SQLiteDatabase db = this.getReadableDatabase();
@@ -413,24 +347,6 @@ public ArrayList<String> getFollowers(String username) {
     }
     return result;
 }
-
-
-    private Cursor getFriendPostsCursor(String username) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        ArrayList<String> friendsList = this.getFollowings(username);
-        if(friendsList.isEmpty()) {
-            return null;
-        }
-        String cond = " ( " + friendsList.get(0);
-        for (int i = 1; i < friendsList.size(); i++) {
-            cond = cond + " OR " + friendsList.get(i);
-        }
-        cond += ") ";
-
-        String sql = "SELECT * FROM " + TABLE2_NAME + " WHERE " + USER_COL + "=" + cond +  " ORDER BY " + PRIVATEPOST_ID_COL + " DESC ";
-        Log.d("DATABASE ========", "getFriendPostsCursor:  " + sql);
-        return db.rawQuery(sql, null);
-    }
 
 
     public ArrayList<String> getFriendRequests(String username) {

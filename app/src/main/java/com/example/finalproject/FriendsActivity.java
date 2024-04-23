@@ -118,9 +118,13 @@ public class FriendsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String friendName = friendSearch.getText().toString();
+                ArrayList<String> friendfollowers = db.getFollowers(friendName);
                 if(!userSet.contains(friendName)) {
                     Toast.makeText(FriendsActivity.this, "Username not found.", Toast.LENGTH_SHORT).show();
                     Log.d("addFriend", "onClick: user not found");
+                } else if (friendfollowers.contains(username)) {
+                    Toast.makeText(FriendsActivity.this, "Already following this user.", Toast.LENGTH_SHORT).show();
+                    Log.d("addFriend", "onClick: user already friends");
                 } else {
                     db.addFriendRequest(username, friendName);
 
