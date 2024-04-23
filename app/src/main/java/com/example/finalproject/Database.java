@@ -212,13 +212,29 @@ public class Database extends SQLiteOpenHelper {
     public ArrayList<String> loadPrivatePost(int counter, String user) {
 
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = this.getFriendPostsCursor(user);
+        ArrayList<String> friendsList = this.getFollowings(user);
+        if(friendsList.isEmpty()) {
+            return null;
+        }
+
+        String cond = " (" + friendsList.get(0);
+        for (int i = 1; i < friendsList.size(); i++) {
+            cond = cond + " OR " + friendsList.get(i);
+        }
+        cond += ") ";
+
+
+        String sql = "SELECT * FROM " + TABLE2_NAME + " WHERE " + USER_COL + "=" + cond +  " ORDER BY " + PRIVATEPOST_ID_COL + " DESC ";
+        //String sql = "SELECT * FROM " + TABLE2_NAME + " ORDER BY " + PRIVATE_POST_COL + " DESC ";
+        Log.d("DATABASE ========", "getFriendPostsCursor:  " + sql);
+
+        Cursor cursor = db.rawQuery(sql, null);
+        Log.d("Cursor", "loadPrivatePost: Cursor Found==========");
 
         ArrayList<String> output = new ArrayList<String>();
         if (cursor != null && cursor.moveToFirst()) {
 
-
-            Log.d("loadPublic", "loadPublicPost: cursor not null");
+            Log.d("loadPrivate", "loadPrivatePost: cursor not null");
             for (int i = 0; i < counter; i++) {
                 if(!cursor.moveToNext()) {
                     return output;
@@ -229,7 +245,6 @@ public class Database extends SQLiteOpenHelper {
             int usernameIndex = cursor.getColumnIndex(USER_PRIVATEPOST_COL);  // Correct use of constants
             int contentIndex = cursor.getColumnIndex(PRIVATE_POST_COL);       // Correct use of constants
             if (usernameIndex == -1 || contentIndex == -1) {
-                cursor.close();
                 return output;
             }
             Log.d("LoadPost", "Username Index: " + usernameIndex + ", Content Index: " + contentIndex);
@@ -360,7 +375,7 @@ public class Database extends SQLiteOpenHelper {
         cond += ") ";
 
         String sql = "SELECT * FROM " + TABLE2_NAME + " WHERE " + USER_COL + "=" + cond +  " ORDER BY " + PRIVATEPOST_ID_COL + " DESC ";
-
+        Log.d("DATABASE ========", "getFriendPostsCursor:  " + sql);
         return db.rawQuery(sql, null);
     }
 
