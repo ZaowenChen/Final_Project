@@ -6,6 +6,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -15,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
@@ -32,21 +34,32 @@ public class FriendsActivity extends AppCompatActivity {
         Intent received_intent = getIntent();
         username = received_intent.getStringExtra("Username");
 
-        LinearLayout friendsLayout = findViewById(R.id.friendslayout);
+        LinearLayout followersLayout = findViewById(R.id.followerslayout);
+        LinearLayout followingLayout = findViewById(R.id.followinglayout);
         LinearLayout requestsLayout = findViewById(R.id.requestlayout);
 
-        ArrayList<String> friendsList = db.getFriends(username);
+        ArrayList<String> followersList = db.getFollowers(username);
+        ArrayList<String> followingList = db.getFollowings(username);
         ArrayList<String> requestsList = db.getFriendRequests(username);
 
         ArrayList<CheckBox> requestChList = new ArrayList<CheckBox>();
 
         //build, inflate, and store checkboxes for friendsList and requestsList
-        if(!friendsList.isEmpty()) {
-            for (String friend : friendsList) {
+        if(!followersList.isEmpty()) {
+            for (String friend : followersList) {
                 TextView tx = friendMaker(friend);
-                friendsLayout.addView(tx);
+                followersLayout.addView(tx);
             }
         }
+
+        if(!followingList.isEmpty()) {
+            for (String friend : followingList) {
+                TextView tx = friendMaker(friend);
+                followingLayout.addView(tx);
+            }
+        }
+
+
         if(!requestsList.isEmpty()) {
             for (String req : requestsList) {
                 CheckBox ch = new CheckBox(this);
@@ -75,9 +88,9 @@ public class FriendsActivity extends AppCompatActivity {
                         Log.d("accept", "onClick: deleteFriendReq");
                         db.deleteFriendRequest(friendname, username);
                         Log.d("accept", "onClick: -checkbox +textview");
-                        friendsList.add(friendname);
+                        followersList.add(friendname);
                         requestsList.remove(i);
-                        friendsLayout.addView(friendMaker(friendname));
+                        followersLayout.addView(friendMaker(friendname));
                         requestsLayout.removeView(requestChList.get(i));
                         requestChList.remove(i);
                     }
@@ -137,13 +150,14 @@ public class FriendsActivity extends AppCompatActivity {
 
         Log.d("Main sensing: ", "Pending intent starting");
 
-        pendingIntent = PendingIntent.getBroadcast(this, 40, intent, PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        pendingIntent = PendingIntent.getBroadcast(this, 40, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         //Generating object of alarmManager using getSystemService method. Here ALARM_SERVICE is used to receive alarm manager with intent at a time.
         AlarmManager alarmManager=(AlarmManager)getSystemService(ALARM_SERVICE);
 
         //this method creates a repeating, exactly timed alarm
-        alarmManager.set(AlarmManager.RTC_WAKEUP, 1000, pendingIntent);
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, SystemClock.currentThreadTimeMillis() + 1000, pendingIntent);
+        //alarmManager.set(AlarmManager.RTC_WAKEUP, 1000, pendingIntent);
         Log.d("===Sensing alarm===", "Friend Request Notification.");
     }
 

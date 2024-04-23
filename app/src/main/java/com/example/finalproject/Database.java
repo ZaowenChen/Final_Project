@@ -282,20 +282,38 @@ public class Database extends SQLiteOpenHelper {
 
 
 
-    public ArrayList<String> getFriends(String username) {
+//    public ArrayList<String> getFriends(String username) {
+//        ArrayList<String> result = new ArrayList<String>();
+//        SQLiteDatabase db = this.getReadableDatabase();
+//        Cursor cursor = db.query(TABLE4_NAME, null, USER_COL + "=?",
+//                new String[]{username}, null, null, null);
+//        if(cursor != null) {
+//            int friendIndex = cursor.getColumnIndex(FRIEND_COL);
+//            if(friendIndex!= -1) {
+//                while(cursor.moveToNext()) {
+//                    result.add(cursor.getString(friendIndex));
+//                }
+//            }
+//            cursor.close();
+//        }
+//        Cursor cursor1 = db.query(TABLE4_NAME, null, FRIEND_COL + "=?",
+//                new String[]{username}, null, null, null);
+//        if(cursor1 != null) {
+//            int friendIndex = cursor1.getColumnIndex(USER_COL);
+//            if(friendIndex!= -1) {
+//                while(cursor1.moveToNext()) {
+//                    result.add(cursor1.getString(friendIndex));
+//                }
+//            }
+//            cursor1.close();
+//        }
+//        db.close();
+//        return result;
+//    }
+
+    public ArrayList<String> getFollowings(String username) {
         ArrayList<String> result = new ArrayList<String>();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE4_NAME, null, USER_COL + "=?",
-                new String[]{username}, null, null, null);
-        if(cursor != null) {
-            int friendIndex = cursor.getColumnIndex(FRIEND_COL);
-            if(friendIndex!= -1) {
-                while(cursor.moveToNext()) {
-                    result.add(cursor.getString(friendIndex));
-                }
-            }
-            cursor.close();
-        }
         Cursor cursor1 = db.query(TABLE4_NAME, null, FRIEND_COL + "=?",
                 new String[]{username}, null, null, null);
         if(cursor1 != null) {
@@ -311,9 +329,27 @@ public class Database extends SQLiteOpenHelper {
         return result;
     }
 
+    public ArrayList<String> getFollowers(String username) {
+        ArrayList<String> result = new ArrayList<String>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE4_NAME, null, USER_COL + "=?",
+                new String[]{username}, null, null, null);
+        if (cursor != null) {
+            int friendIndex = cursor.getColumnIndex(FRIEND_COL);
+            if (friendIndex != -1) {
+                while (cursor.moveToNext()) {
+                    result.add(cursor.getString(friendIndex));
+                }
+            }
+            cursor.close();
+        }
+        db.close();
+        return result;
+    }
+
     private Cursor getFriendPostsCursor(String username) {
         SQLiteDatabase db = this.getReadableDatabase();
-        ArrayList<String> friendsList = this.getFriends(username);
+        ArrayList<String> friendsList = this.getFollowings(username);
         if(friendsList.isEmpty()) {
             return null;
         }

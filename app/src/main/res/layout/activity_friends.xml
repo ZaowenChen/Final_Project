@@ -82,13 +82,31 @@
                 android:background="@drawable/border"
                 android:fontFamily="monospace"
                 android:paddingVertical="10sp"
-                android:text="Friends List:"
+                android:text="Followers List:"
                 android:textAlignment="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display2"
                 android:textSize="18sp" />
 
             <LinearLayout
-                android:id="@+id/friendslayout"
+                android:id="@+id/followerslayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"></LinearLayout>
+
+            <TextView
+                android:id="@+id/followingListHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/border"
+                android:fontFamily="monospace"
+                android:paddingVertical="10sp"
+                android:text="Following List:"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+                android:textSize="18sp" />
+
+            <LinearLayout
+                android:id="@+id/followinglayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"></LinearLayout>
