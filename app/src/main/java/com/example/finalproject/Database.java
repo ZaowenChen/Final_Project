@@ -31,7 +31,7 @@ public class Database extends SQLiteOpenHelper {
     private static final String DATE_PRIVATEPOST_COL = "Date";
 
     private static final String TABLE3_NAME = "PublicPost";
-    private static final String PUBLICPOST_ID_COL = "Post_ID";
+    public static final String PUBLICPOST_ID_COL = "Post_ID";
     public static final String USER_PUBLICPOST_COL = "Username";
     public  static final String PUBLIC_POST_COL = "Post";
     private static final String DATE_PUBLICPOST_COL = "Date";
@@ -175,6 +175,26 @@ public class Database extends SQLiteOpenHelper {
         String sql = "SELECT * FROM " + TABLE3_NAME + " ORDER BY " + PUBLICPOST_ID_COL + " DESC LIMIT 1";
         Cursor cursorpublic = db.rawQuery(sql, null);
         return cursorpublic;
+    }
+    public Cursor getPublicPostAt(int postId, boolean next) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String sql;
+        if (next) {
+            sql = "SELECT * FROM " + TABLE3_NAME + " WHERE " + PUBLICPOST_ID_COL + " > " + postId + " ORDER BY " + PUBLICPOST_ID_COL + " ASC LIMIT 1";
+        } else {
+            sql = "SELECT * FROM " + TABLE3_NAME + " WHERE " + PUBLICPOST_ID_COL + " < " + postId + " ORDER BY " + PUBLICPOST_ID_COL + " DESC LIMIT 1";
+        }
+        return db.rawQuery(sql, null);
+    }
+    public Cursor getPrivatePostAt(int postId, boolean next) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String sql;
+        if (next) {
+            sql = "SELECT * FROM " + TABLE2_NAME + " WHERE " + PRIVATEPOST_ID_COL + " > " + postId + " ORDER BY " + PRIVATEPOST_ID_COL + " ASC LIMIT 1";
+        } else {
+            sql = "SELECT * FROM " + TABLE2_NAME + " WHERE " + PRIVATEPOST_ID_COL + " < " + postId + " ORDER BY " + PRIVATEPOST_ID_COL + " DESC LIMIT 1";
+        }
+        return db.rawQuery(sql, null);
     }
 
 
