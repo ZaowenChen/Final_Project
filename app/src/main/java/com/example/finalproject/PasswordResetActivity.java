@@ -19,6 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import android.os.Environment;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -30,6 +31,7 @@ public class PasswordResetActivity extends AppCompatActivity {
     private EditText oldPassword, newPassword, conPassword;
     private Button confirm;
     private Database db;
+    private String username;
 
 
     @Override
@@ -43,7 +45,7 @@ public class PasswordResetActivity extends AppCompatActivity {
         newPassword = findViewById(R.id.new_pass2);
         conPassword = findViewById(R.id.conf_pass2);
         confirm = findViewById(R.id.submit_password_reset);
-        String username = getIntent().getStringExtra("Username");
+        username = getIntent().getStringExtra("Username");
 
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,11 +54,16 @@ public class PasswordResetActivity extends AppCompatActivity {
                 String newPass = newPassword.getText().toString();
                 String confPass = conPassword.getText().toString();
 
+                Log.d("Password", "onClick: REACH HERE=====" + validatePassword(newPass));
                 if (!db.isPasswordCorrect(username, oldPass)) {
                     oldPassword.setError("Password is incorrect");
-                } else if (!newPass.equals(confPass)) {
+                } else if (!validatePassword(newPass)) {
+                    Log.d("Password", "onClick: REACH Validate PW HERE=====");
+                    newPassword.setError("Password must be 8 characters, start with uppercase, include a number, no spaces.");
+                }  else if (!newPass.equals(confPass)) {
                     conPassword.setError("Password inconsistent");
                 } else {
+                    Log.d("Password", "onClick: REACH SUCCESSFUL HERE=====");
                     if (db.updatePassword(username, newPass)) {
                         try {
                             savePasswordChangeLog(username, newPass);
@@ -101,6 +108,25 @@ public class PasswordResetActivity extends AppCompatActivity {
         myOutWriter.append(logEntry.toString() + "\n");
         myOutWriter.close();
         fOut.close();
+    }
+
+    private boolean validatePassword(String password) {
+        boolean hasUpperCase = !password.equals(password.toLowerCase());
+        boolean hasNumber = password.matches(".*\\d.*");
+        if(password.length() == 8 && hasUpperCase && hasNumber && !password.contains(" ")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void onBackPressed() {
+        // Close app when back pressed
+        Log.d("PasswordSetting", "backPressed, go to account");
+        Intent intent = new Intent(getApplicationContext(), AccountSettingActivity.class);
+        intent.putExtra("Username", username);
+        startActivity(intent);
+
     }
 
 }

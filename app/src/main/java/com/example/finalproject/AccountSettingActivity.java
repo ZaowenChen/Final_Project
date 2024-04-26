@@ -31,6 +31,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public class AccountSettingActivity extends AppCompatActivity {
 
     private TextView userOld, emailOld;
+    private String username;
     private EditText emailNew;
     private Button btnConfirm, btnResetPassword, btnLogout;
     private Database db;
@@ -49,7 +50,7 @@ public class AccountSettingActivity extends AppCompatActivity {
         btnLogout = findViewById(R.id.logout_settings);
 
         // Assume the username is passed from the previous activity
-        String username = getIntent().getStringExtra("Username");
+        username = getIntent().getStringExtra("Username");
         userOld.setText(username);
         emailOld.setText(db.getEmailByUsername(username));
 
@@ -114,5 +115,14 @@ public class AccountSettingActivity extends AppCompatActivity {
             myOutWriter.close();
             fOut.close();
         }
+
+    public void onBackPressed() {
+        // Close app when back pressed
+        Log.d("AccountSetting", "backPressed, go to home");
+        Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+        intent.putExtra("Username", username);
+        startActivity(intent);
+
+    }
 
 }
